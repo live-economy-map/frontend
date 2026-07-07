@@ -9,8 +9,17 @@ const api = axios.create({
 
 // Request interceptor — attach JWT token to every request
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  const authStorage = localStorage.getItem('auth-storage');
+  if (authStorage) {
+    try {
+      const { state } = JSON.parse(authStorage);
+      if (state?.token) {
+        config.headers.Authorization = `Bearer ${state.token}`;
+      }
+    } catch {
+      // malformed storage, skip attaching token
+    }
+  }
   return config;
 });
 
