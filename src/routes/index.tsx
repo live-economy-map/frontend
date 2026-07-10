@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
+import AuthLayout from '@/components/layouts/AuthLayout';
 import { ROUTES } from '@/constants';
 
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
@@ -24,7 +25,9 @@ export default function AppRouter() {
         <Routes>
           {/* Public routes */}
           <Route element={<PublicRoute />}>
-            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route element={<AuthLayout />}>
+              <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            </Route>
           </Route>
 
           {/* Protected routes */}
