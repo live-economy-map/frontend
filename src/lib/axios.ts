@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { env } from '@/config/env';
+import type { ApiResponse } from '@/types';
 
 const api = axios.create({
   baseURL: env.VITE_API_URL,
@@ -23,12 +24,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor — handle 401 globally
+// Response interceptor — unwrap the backend's SuccessResponse envelope,
+// and handle 401 globally
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Backend always responds with { statusCode, success, message, data }.
+    // Unwrap here once so every caller can keep doing `res.data` and get
+    // the actual payload, not the envelope.
+    const body = response.data as ApiResponse<unknown>;
+    if (body && typeof body === 'object' && 'data' in body) {
+      response.data = body.data;
+    }
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('auth-storage');
       window.location.href = '/login';
     }
     return Promise.reject(error);
