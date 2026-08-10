@@ -19,7 +19,7 @@
 * 🧹 **ESLint + Prettier + Husky + lint-staged** for consistent, automated code quality
 * 📦 Opinionated folder structure designed for long-term scalability
 
----
+--- 
 
 # 🛠 Tech Stack
 
