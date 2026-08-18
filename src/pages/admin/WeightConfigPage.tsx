@@ -1,5 +1,3 @@
-import React from 'react';
-
 const WeightConfigPage = () => {
   return <div>WeightConfigPage</div>;
 };
