@@ -1,130 +1,225 @@
+/* src/styles/globals.css */
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
+:root {
+  /* ---- shadcn structural tokens ---- */
+  --radius: 0.5rem;
+
+  --background: #f7f9fe;
+  --foreground: #181c20;
+
+  --card: #ffffff;
+  --card-foreground: #181c20;
+
+  --popover: #ffffff;
+  --popover-foreground: #181c20;
+
+  --primary: #3f82f7;
+  --primary-foreground: #ffffff;
+
+  --secondary: #dce3ed;
+  --secondary-foreground: #40474f;
+
+  --muted: #eceef3;
+  --muted-foreground: #52627a;
+
+  --accent: #eaf2ff;
+  --accent-foreground: #3f82f7;
+
+  --destructive: #ba1a1a;
+  --destructive-foreground: #ffffff;
+
+  --border: #e6ebf4;
+  --input: #e6ebf4;
+  --ring: #3f82f7;
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: 'Geist Variable', sans-serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
+  /* =========================================================
+     SHADCN STRUCTURAL TOKENS
+     ========================================================= */
+
   --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* =========================================================
+     BORDER RADIUS
+     ========================================================= */
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* =========================================================
+     PROJECT COLORS
+     ========================================================= */
+
+  --color-border-base: #e6ebf4;
+
+  --color-surface-dim: #d8dadf;
+  --color-surface-container-low: #f1f4f9;
+  --color-surface-container: #eceef3;
+  --color-surface-container-high: #e6e8ed;
+  --color-surface-container-highest: #e0e2e7;
+  --color-surface-container-lowest: #ffffff;
+
+  --color-on-surface: #181c20;
+  --color-on-surface-variant: #424754;
+  --color-outline: #727785;
+  --color-outline-variant: #c2c6d6;
+
+  --color-primary-hover: #3275ec;
+  --color-primary-container: #2670e4;
+  --color-on-primary-container: #fefcff;
+
+  --color-secondary-fixed: #dce3ed;
+  --color-secondary-fixed-dim: #c0c7d1;
+  --color-on-secondary-fixed-variant: #40474f;
+
+  --color-tertiary: #4c5c7d;
+
+  --color-text-secondary: #52627a;
+  --color-text-muted: #8290a7;
+
+  --color-success: #43b982;
+  --color-success-bg: #eaf8f2;
+
+  --color-warning: #f5a34a;
+  --color-warning-bg: #fff4e5;
+
+  --color-danger: #e74f3d;
+  --color-danger-bg: #fce8e8;
+
+  --color-heatmap-low: #69c79a;
+  --color-heatmap-med-low: #9bd6a9;
+  --color-heatmap-med: #f3d96a;
+  --color-heatmap-high: #f5a34a;
+  --color-heatmap-extreme: #e74f3d;
+
+  /* =========================================================
+     TYPOGRAPHY
+     ========================================================= */
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --text-hero-lg: 48px;
+  --text-hero-lg--line-height: 1.1;
+  --text-hero-lg--letter-spacing: -0.03em;
+  --text-hero-lg--font-weight: 800;
+
+  --text-hero-lg-mobile: 32px;
+  --text-hero-lg-mobile--line-height: 1.2;
+  --text-hero-lg-mobile--letter-spacing: -0.02em;
+  --text-hero-lg-mobile--font-weight: 800;
+
+  --text-page-title: 32px;
+  --text-page-title--line-height: 1.15;
+  --text-page-title--letter-spacing: -0.01em;
+  --text-page-title--font-weight: 700;
+
+  --text-card-title: 16px;
+  --text-card-title--line-height: 1.4;
+  --text-card-title--font-weight: 700;
+
+  --text-body-md: 15px;
+  --text-body-md--line-height: 1.6;
+
+  --text-body-sm: 13px;
+  --text-body-sm--line-height: 1.5;
+
+  --text-label-caps: 11px;
+  --text-label-caps--letter-spacing: 0.06em;
+  --text-label-caps--font-weight: 600;
+
+  --text-data-kpi: 17px;
+  --text-data-kpi--font-weight: 700;
+
+  /* =========================================================
+     PROJECT SPACING
+     
+     IMPORTANT:
+     These names intentionally DO NOT use:
+     --spacing-sm
+     --spacing-md
+     --spacing-lg
+     --spacing-xl
+     
+     Those names collide with Tailwind's built-in namespace.
+     ========================================================= */
+
+  --spacing-space-micro: 4px;
+  --spacing-space-sm: 8px;
+  --spacing-space-md: 16px;
+  --spacing-space-lg: 24px;
+  --spacing-space-xl: 48px;
+  --spacing-space-xxl: 64px;
+
+  --spacing-space-gutter: 24px;
+  --spacing-space-margin-mobile: 16px;
+  --spacing-space-margin-desktop: 48px;
 }
 
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+/* =========================================================
+   GLOBAL BASE STYLES
+   ========================================================= */
+
+body {
+  background-color: var(--background);
+  font-family: var(--font-sans);
+  color: var(--foreground);
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+/* =========================================================
+   SHARED VISUAL UTILITIES
+   ========================================================= */
+
+.shadow-card,
+.soft-shadow {
+  box-shadow: 0 12px 35px rgba(50, 88, 150, 0.08);
+}
+
+.shadow-nav {
+  box-shadow: 0 2px 10px rgba(50, 88, 150, 0.05);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* =========================================================
+   CONTENT CONTAINER
+   ========================================================= */
+
+.content-container {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-space-md);
+}
+
+@media (min-width: 768px) {
+  .content-container {
+    padding-inline: var(--spacing-space-xl);
+  }
 }

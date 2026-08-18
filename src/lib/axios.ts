@@ -1,6 +1,8 @@
+// src/lib/axios.ts
 import axios from 'axios';
 import { env } from '@/config/env';
 import type { ApiResponse } from '@/types';
+import { ROUTES } from '@/constants';
 
 const api = axios.create({
   baseURL: env.VITE_API_URL,
@@ -8,9 +10,11 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Request interceptor — attach JWT token to every request
+// Request interceptor — attach admin JWT token when present.
+// Public endpoints proceed without the header on the same client instance
+// (per frontend conventions 0.4) — no separate unauthenticated client needed.
 api.interceptors.request.use((config) => {
-  const authStorage = localStorage.getItem('auth-storage');
+  const authStorage = localStorage.getItem('admin-auth-storage');
   if (authStorage) {
     try {
       const { state } = JSON.parse(authStorage);
@@ -38,9 +42,15 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('auth-storage');
-      window.location.href = '/login';
+    // A 401 can only ever come from an /admin/* call — public endpoints
+    // never return 401 (per frontend conventions 0.6). Only redirect when
+    // the failing request's URL actually matches /admin/, and always to
+    // the admin login route specifically — never a generic /login, since
+    // public visitors never log in at all.
+    const requestUrl: string = error.config?.url ?? '';
+    if (error.response?.status === 401 && requestUrl.includes('/admin/')) {
+      localStorage.removeItem('admin-auth-storage');
+      window.location.href = ROUTES.ADMIN_LOGIN;
     }
     return Promise.reject(error);
   }

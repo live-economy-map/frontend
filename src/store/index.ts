@@ -1,1 +1,2 @@
-export * from './auth.store';
+// src/store/index.ts
+export * from './adminAuth.store';
