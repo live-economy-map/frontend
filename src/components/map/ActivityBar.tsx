@@ -88,7 +88,7 @@ export default function ActivityBar({
       }
 
       updateIndex(nextIndex);
-    }, 1500);
+    }, 1800);
   }, [maxIndex, selectedIndex, stopPlayback, totalPeriods, updateIndex]);
 
   const handlePlayToggle = () => {

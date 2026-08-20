@@ -3,26 +3,23 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import type { Layer } from 'leaflet';
 import type { GrowthCell } from '@/types';
 
-const HEATMAP_COLORS = ['#69C79A', '#9BD6A9', '#F3D96A', '#F5A34A', '#E74F3D'];
-
 function scoreToColor(score: number): string {
-  if (score < 0.2) return HEATMAP_COLORS[0];
-  if (score < 0.4) return HEATMAP_COLORS[1];
-  if (score < 0.6) return HEATMAP_COLORS[2];
-  if (score < 0.8) return HEATMAP_COLORS[3];
-  return HEATMAP_COLORS[4];
+  if (score >= 0.85) return '#991b1b'; // Deep Red
+  if (score >= 0.7) return '#dc2626'; // Red
+  if (score >= 0.55) return '#f97316'; // Orange
+  if (score >= 0.41) return '#fb923c'; // Amber / Light Orange
+  if (score >= 0.18) return '#fcd34d'; // Yellow
+  return '#bbf7d0'; // Light Green
 }
 
 function getStatus(score: number): { label: string; color: string; bg: string } {
   if (score >= 0.7) {
-    return { label: 'High', color: '#E74F3D', bg: '#E74F3D20' };
+    return { label: 'High', color: '#dc2626', bg: '#dc262620' };
   }
-
   if (score >= 0.4) {
-    return { label: 'Medium', color: '#E87C3C', bg: '#E87C3C20' };
+    return { label: 'Medium', color: '#f97316', bg: '#f9731620' };
   }
-
-  return { label: 'Low', color: '#69C79A', bg: '#69C79A20' };
+  return { label: 'Low', color: '#16a34a', bg: '#16a34a20' };
 }
 
 const ADDIS_ABABA_CENTER: [number, number] = [9.03, 38.74];

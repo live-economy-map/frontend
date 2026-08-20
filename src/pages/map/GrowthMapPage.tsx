@@ -166,6 +166,14 @@ export default function GrowthMapPage() {
             </div>
           </div>
 
+          {/* Fallback Notice Banner */}
+          {cellsData?.periodSubstituted && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-amber-500/95 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg flex items-center gap-2 border border-amber-400/50">
+              <span className="material-symbols-outlined text-sm">info</span>
+              <span>No data for requested period — showing {cellsData.period}</span>
+            </div>
+          )}
+
           {isLoading && (
             <div className="absolute inset-0 z-40 flex items-center justify-center bg-surface/60">
               <span className="text-body-sm text-text-muted">Loading map…</span>
