@@ -53,9 +53,9 @@ export default function CaseStudyCard({ caseStudy, onClick }: CaseStudyCardProps
             src={caseStudy.beforeImageUrl}
             alt={caseStudy.name}
             onError={(e) => {
-              // Fallback image if the URL fails to load
-              (e.target as HTMLImageElement).src =
-                'https://via.placeholder.com/800x400/e0e2e7/52627A?text=No+Image';
+              const target = e.currentTarget;
+              target.onerror = null; // Prevent infinite fallback loops
+              target.src = 'https://placehold.co/800x400/e0e2e7/52627A?text=No+Image';
             }}
           />
         ) : (
@@ -63,12 +63,12 @@ export default function CaseStudyCard({ caseStudy, onClick }: CaseStudyCardProps
             <span className="material-symbols-outlined text-4xl">image</span>
           </div>
         )}
-        {caseStudy.isPublished && (
-          <div className="absolute top-3 right-3 bg-[#EAF8F2] text-[#43B982] font-label-caps text-label-caps px-2 py-1 border border-[#43B982]/20 flex items-center gap-1 rounded-full font-bold">
-            <span className="material-symbols-outlined text-[14px]">check_circle</span>
-            Verified
-          </div>
-        )}
+
+        {/* Verified badge */}
+        <div className="absolute top-3 right-3 bg-[#EAF8F2] text-[#43B982] font-label-caps text-label-caps px-2 py-1 border border-[#43B982]/20 flex items-center gap-1 rounded-full font-bold">
+          <span className="material-symbols-outlined text-[14px]">check_circle</span>
+          Verified
+        </div>
       </div>
 
       {/* Content Section */}
@@ -94,17 +94,17 @@ export default function CaseStudyCard({ caseStudy, onClick }: CaseStudyCardProps
           )}
         </div>
 
-        <p className="text-on-surface-variant font-body-sm mt-3 mb-6 flex-grow line-clamp-3">
-          {caseStudy.evidenceDescription}
-        </p>
-
-        <div className="pt-4 border-t border-border-base flex justify-between items-center">
+        <div className="pt-4 mt-auto border-t border-border-base flex justify-between items-center">
           <div className="flex items-center gap-2 text-text-muted font-body-sm">
             <span className="material-symbols-outlined text-[16px]">calendar_today</span>
-            {new Date(caseStudy.confirmedDate).toLocaleDateString('en-US', {
-              month: 'short',
-              year: 'numeric',
-            })}
+            {caseStudy.confirmedDate ? (
+              new Date(caseStudy.confirmedDate).toLocaleDateString('en-US', {
+                month: 'short',
+                year: 'numeric',
+              })
+            ) : (
+              <span>Verified case study</span>
+            )}
           </div>
           <div className="text-primary font-body-sm font-semibold hover:text-[#3275EC] flex items-center gap-1 transition-colors">
             View Details

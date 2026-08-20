@@ -31,5 +31,5 @@ export const QUERY_KEYS = {
 
 // Helper: build a concrete case-study detail path from the ROUTES pattern.
 export function caseStudyDetailPath(caseStudyId: string) {
-  return ROUTES.CASE_STUDY_DETAIL.replace(':caseStudyId', caseStudyId);
+  return ROUTES.CASE_STUDY_DETAIL.replace(':id', caseStudyId);
 }

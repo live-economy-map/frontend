@@ -1,7 +1,9 @@
+// frontend/src/pages/CaseStudiesListPage.tsx
+
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCaseStudies } from '@/hooks/useCaseStudies';
-import EmptyState from '@/components/common/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/ui/button';
 import { caseStudyDetailPath } from '@/constants';
 
@@ -117,7 +119,10 @@ export default function CaseStudiesListPage() {
       )}
 
       {!isLoading && !isError && data && data.items.length === 0 && (
-        <EmptyState message="No published case studies yet." />
+        <EmptyState
+          title="No published case studies yet"
+          description="Check back later for verified growth observations."
+        />
       )}
 
       {!isLoading && !isError && data && data.items.length > 0 && (
@@ -149,12 +154,11 @@ export default function CaseStudiesListPage() {
                         <span className="material-symbols-outlined text-4xl">image</span>
                       </div>
                     )}
-                    {cs.isPublished && (
-                      <div className="absolute top-3 right-3 bg-[#EAF8F2] text-[#43B982] font-label-caps text-label-caps px-2 py-1 border border-[#43B982]/20 flex items-center gap-1 rounded-full font-bold">
-                        <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                        Verified
-                      </div>
-                    )}
+                    {/* All items in public list are published - show verified badge */}
+                    <div className="absolute top-3 right-3 bg-[#EAF8F2] text-[#43B982] font-label-caps text-label-caps px-2 py-1 border border-[#43B982]/20 flex items-center gap-1 rounded-full font-bold">
+                      <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                      Verified
+                    </div>
                   </div>
 
                   {/* Content Section */}
@@ -191,10 +195,14 @@ export default function CaseStudiesListPage() {
                         <span className="material-symbols-outlined text-[16px]">
                           calendar_today
                         </span>
-                        {new Date(cs.confirmedDate).toLocaleDateString('en-US', {
-                          month: 'short',
-                          year: 'numeric',
-                        })}
+                        {cs.confirmedDate ? (
+                          new Date(cs.confirmedDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            year: 'numeric',
+                          })
+                        ) : (
+                          <span>Verified case study</span>
+                        )}
                       </div>
                       <div className="text-primary font-body-sm font-semibold hover:text-[#3275EC] flex items-center gap-1 transition-colors">
                         View Details

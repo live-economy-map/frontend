@@ -6,7 +6,6 @@ import PublicRoute from './PublicRoute';
 import PublicLayout from '@/components/layouts/PublicLayout';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import AuthLayout from '@/components/layouts/AuthLayout';
-import PublicLayout from '@/components/layouts/PublicLayout';
 import { ROUTES } from '@/constants';
 
 // Public pages
@@ -24,8 +23,6 @@ const WeightConfigPage = lazy(() => import('@/pages/admin/WeightConfigPage'));
 const CaseStudyCurationPage = lazy(() => import('@/pages/admin/CaseStudyCurationPage'));
 
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
-const CaseStudiesListPage = lazy(() => import('@/pages/CaseStudiesListPage'));
-const CaseStudyDetailPage = lazy(() => import('@/pages/CaseStudyDetailPage'));
 
 function PageLoader() {
   return (
@@ -47,21 +44,37 @@ const router = createBrowserRouter([
     children: [
       { path: ROUTES.HOME, element: withSuspense(<LandingPage />) },
       { path: ROUTES.MAP, element: withSuspense(<GrowthMapPage />) },
-      { path: ROUTES.CASE_STUDIES, element: withSuspense(<CaseStudiesListPage />) },
-      { path: ROUTES.CASE_STUDY_DETAIL, element: withSuspense(<CaseStudyDetailPage />) },
-      { path: ROUTES.METHODOLOGY, element: withSuspense(<MethodologyPage />) },
+      {
+        path: ROUTES.CASE_STUDIES,
+        element: withSuspense(<CaseStudiesListPage />),
+      },
+      {
+        path: ROUTES.CASE_STUDY_DETAIL,
+        element: withSuspense(<CaseStudyDetailPage />),
+      },
+      {
+        path: ROUTES.METHODOLOGY,
+        element: withSuspense(<MethodologyPage />),
+      },
     ],
   },
+
   // Admin login only — PublicRoute + AuthLayout
   {
     element: <PublicRoute />,
     children: [
       {
         element: <AuthLayout />,
-        children: [{ path: ROUTES.ADMIN_LOGIN, element: withSuspense(<AdminLoginPage />) }],
+        children: [
+          {
+            path: ROUTES.ADMIN_LOGIN,
+            element: withSuspense(<AdminLoginPage />),
+          },
+        ],
       },
     ],
   },
+
   // Admin area — ProtectedRoute + DashboardLayout
   {
     element: <ProtectedRoute />,
@@ -69,15 +82,32 @@ const router = createBrowserRouter([
       {
         element: <DashboardLayout />,
         children: [
-          { path: ROUTES.ADMIN_DASHBOARD, element: withSuspense(<AdminDashboardPage />) },
-          { path: ROUTES.ADMIN_PIPELINE, element: withSuspense(<PipelineManagementPage />) },
-          { path: ROUTES.ADMIN_WEIGHT_CONFIGS, element: withSuspense(<WeightConfigPage />) },
-          { path: ROUTES.ADMIN_CASE_STUDIES, element: withSuspense(<CaseStudyCurationPage />) },
+          {
+            path: ROUTES.ADMIN_DASHBOARD,
+            element: withSuspense(<AdminDashboardPage />),
+          },
+          {
+            path: ROUTES.ADMIN_PIPELINE,
+            element: withSuspense(<PipelineManagementPage />),
+          },
+          {
+            path: ROUTES.ADMIN_WEIGHT_CONFIGS,
+            element: withSuspense(<WeightConfigPage />),
+          },
+          {
+            path: ROUTES.ADMIN_CASE_STUDIES,
+            element: withSuspense(<CaseStudyCurationPage />),
+          },
         ],
       },
     ],
   },
-  { path: '*', element: withSuspense(<NotFoundPage />) },
+
+  // Catch-all
+  {
+    path: '*',
+    element: withSuspense(<NotFoundPage />),
+  },
 ]);
 
 export default router;

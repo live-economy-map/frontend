@@ -1,9 +1,17 @@
-import { Link, useParams } from 'react-router-dom';
+// frontend/src/pages/CaseStudyDetailPage.tsx
+
+import { Link, useParams, Navigate } from 'react-router-dom';
 import CaseStudyDetailPanel from '@/components/case-studies/CaseStudyDetailPanel';
 import { ROUTES } from '@/constants';
 
 export default function CaseStudyDetailPage() {
-  const { caseStudyId } = useParams<{ caseStudyId: string }>();
+  // CHANGE THIS: Match the route parameter name ':id'
+  const { id } = useParams<{ id: string }>(); // Changed from 'caseStudyId' to 'id'
+
+  // If no ID is provided, redirect back to the list
+  if (!id) {
+    return <Navigate to={ROUTES.CASE_STUDIES} replace />;
+  }
 
   return (
     <div>
@@ -15,8 +23,8 @@ export default function CaseStudyDetailPage() {
         Back to all Case Studies
       </Link>
 
-      {/* No onClose — this is the standalone page, not an overlay (per 8-3) */}
-      <CaseStudyDetailPanel caseStudyId={caseStudyId ?? ''} />
+      {/* Pass the id to the panel */}
+      <CaseStudyDetailPanel caseStudyId={id} />
     </div>
   );
 }
