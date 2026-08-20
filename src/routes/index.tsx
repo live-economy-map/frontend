@@ -1,14 +1,18 @@
+import React from 'react';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import AuthLayout from '@/components/layouts/AuthLayout';
+import PublicLayout from '@/components/layouts/PublicLayout';
 import { ROUTES } from '@/constants';
 
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const DashboardPage = lazy(() => import('@/pages/dashboard/DashboardPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+const CaseStudiesListPage = lazy(() => import('@/pages/CaseStudiesListPage'));
+const CaseStudyDetailPage = lazy(() => import('@/pages/CaseStudyDetailPage'));
 
 function PageLoader() {
   return (
@@ -24,7 +28,14 @@ const withSuspense = (element: React.ReactNode) => (
   <Suspense fallback={<PageLoader />}>{element}</Suspense>
 );
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
+  {
+    element: <PublicLayout />,
+    children: [
+      { path: ROUTES.CASE_STUDIES, element: withSuspense(<CaseStudiesListPage />) },
+      { path: ROUTES.CASE_STUDY_DETAIL, element: withSuspense(<CaseStudyDetailPage />) },
+    ],
+  },
   {
     element: <PublicRoute />,
     children: [
