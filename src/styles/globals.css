@@ -1,111 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap'); @import url('https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined'); 
+/* src/styles/globals.css */
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
+:root {
+  /* ---- shadcn structural tokens ---- */
+  --radius: 0.5rem;
+
+  --background: #f7f9fe;
+  --foreground: #181c20;
+
+  --card: #ffffff;
+  --card-foreground: #181c20;
+
+  --popover: #ffffff;
+  --popover-foreground: #181c20;
+
+  --primary: #3f82f7;
+  --primary-foreground: #ffffff;
+
+  --secondary: #dce3ed;
+  --secondary-foreground: #40474f;
+
+  --muted: #eceef3;
+  --muted-foreground: #52627a;
+
+  --accent: #eaf2ff;
+  --accent-foreground: #3f82f7;
+
+  --destructive: #ba1a1a;
+  --destructive-foreground: #ffffff;
+
+  --border: #e6ebf4;
+  --input: #e6ebf4;
+  --ring: #3f82f7;
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: 'Inter', sans-serif;
+  /* =========================================================
+     SHADCN STRUCTURAL TOKENS
+     ========================================================= */
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-dim: var(--surface-dim);
-  --color-surface-container-lowest: var(--surface-container-lowest);
-  --color-surface-container-low: var(--surface-container-low);
-  --color-surface-container: var(--surface-container);
-  --color-surface-container-high: var(--surface-container-high);
-  --color-surface-container-highest: var(--surface-container-highest);
-  --color-on-surface: var(--on-surface);
-  --color-on-surface-variant: var(--on-surface-variant);
-  --color-outline: var(--outline);
-  --color-outline-variant: var(--outline-variant);
-
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-on-primary: var(--on-primary);
-  --color-primary-container: var(--primary-container);
-  --color-on-primary-container: var(--on-primary-container);
-
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
-  --color-secondary-fixed: var(--secondary-fixed);
-  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
-  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
-
-  --color-tertiary: var(--tertiary);
-
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-  --color-border-base: var(--border-base);
-  --color-border: var(--border-base);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-  /* heatmap palette — GrowthMapCanvas only */
-  --color-heatmap-low: var(--heatmap-low);
-  --color-heatmap-med-low: var(--heatmap-med-low);
-  --color-heatmap-med: var(--heatmap-med);
-  --color-heatmap-high: var(--heatmap-high);
-  --color-heatmap-extreme: var(--heatmap-extreme);
+  /* =========================================================
+     BORDER RADIUS
+     ========================================================= */
 
-  /* status colors — StatusBadge */
-  --color-status-success-bg: var(--status-success-bg);
-  --color-status-success-text: var(--status-success-text);
-  --color-status-warning-bg: var(--status-warning-bg);
-  --color-status-warning-text: var(--status-warning-text);
-  --color-status-error-bg: var(--status-error-bg);
-  --color-status-error-text: var(--status-error-text);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 
-  /* shadcn/ui primitive aliases — button.tsx / card.tsx (already built, unmodified)
-     consume these standard names directly. Must stay mapped or those components break. */
-  --color-primary-foreground: var(--on-primary);
-  --color-secondary-foreground: var(--on-secondary-fixed-variant);
-  --color-muted: var(--surface-container);
-  --color-muted-foreground: var(--text-muted);
-  --color-accent: var(--secondary);
-  --color-accent-foreground: var(--on-secondary-fixed-variant);
-  --color-destructive-foreground: var(--on-destructive);
-  --color-input: var(--border-base);
-  --color-ring: var(--primary);
-  --color-card: var(--surface-container-lowest);
-  --color-card-foreground: var(--on-surface);
-  --color-popover: var(--surface-container-lowest);
-  --color-popover-foreground: var(--on-surface);
+  /* =========================================================
+     PROJECT COLORS
+     ========================================================= */
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 9999px;
-  --radius-DEFAULT: 0.5rem;
+  --color-border-base: #e6ebf4;
 
-  /* project spacing — namespaced `space-*` to avoid colliding with Tailwind's sm/md/lg/xl */
-  --spacing-space-micro: 4px;
-  --spacing-space-sm: 8px;
-  --spacing-space-md: 16px;
-  --spacing-space-lg: 24px;
-  --spacing-space-xl: 48px;
-  --spacing-space-xxl: 64px;
-  --spacing-space-gutter: 24px;
-  --spacing-space-margin-mobile: 16px;
-  --spacing-space-margin-desktop: 48px;
+  --color-surface-dim: #d8dadf;
+  --color-surface-container-low: #f1f4f9;
+  --color-surface-container: #eceef3;
+  --color-surface-container-high: #e6e8ed;
+  --color-surface-container-highest: #e0e2e7;
+  --color-surface-container-lowest: #ffffff;
 
-  /* Typography scale — see 9.1. Each --text-* token bundles size/line-height/
-     letter-spacing/weight into a single `text-{name}` utility (Tailwind v4). */
+  --color-on-surface: #181c20;
+  --color-on-surface-variant: #424754;
+  --color-outline: #727785;
+  --color-outline-variant: #c2c6d6;
+
+  --color-primary-hover: #3275ec;
+  --color-primary-container: #2670e4;
+  --color-on-primary-container: #fefcff;
+
+  --color-secondary-fixed: #dce3ed;
+  --color-secondary-fixed-dim: #c0c7d1;
+  --color-on-secondary-fixed-variant: #40474f;
+
+  --color-tertiary: #4c5c7d;
+
+  --color-text-secondary: #52627a;
+  --color-text-muted: #8290a7;
+
+  --color-success: #43b982;
+  --color-success-bg: #eaf8f2;
+
+  --color-warning: #f5a34a;
+  --color-warning-bg: #fff4e5;
+
+  --color-danger: #e74f3d;
+  --color-danger-bg: #fce8e8;
+
+  --color-heatmap-low: #69c79a;
+  --color-heatmap-med-low: #9bd6a9;
+  --color-heatmap-med: #f3d96a;
+  --color-heatmap-high: #f5a34a;
+  --color-heatmap-extreme: #e74f3d;
+
+  /* =========================================================
+     TYPOGRAPHY
+     ========================================================= */
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
   --text-hero-lg: 48px;
   --text-hero-lg--line-height: 1.1;
   --text-hero-lg--letter-spacing: -0.03em;
@@ -127,78 +143,72 @@
 
   --text-body-md: 15px;
   --text-body-md--line-height: 1.6;
-  --text-body-md--font-weight: 400;
 
   --text-body-sm: 13px;
   --text-body-sm--line-height: 1.5;
-  --text-body-sm--font-weight: 400;
 
   --text-label-caps: 11px;
-  --text-label-caps--line-height: 1;
   --text-label-caps--letter-spacing: 0.06em;
   --text-label-caps--font-weight: 600;
 
   --text-data-kpi: 17px;
-  --text-data-kpi--line-height: 1;
   --text-data-kpi--font-weight: 700;
+
+  /* =========================================================
+     PROJECT SPACING
+     
+     IMPORTANT:
+     These names intentionally DO NOT use:
+     --spacing-sm
+     --spacing-md
+     --spacing-lg
+     --spacing-xl
+     
+     Those names collide with Tailwind's built-in namespace.
+     ========================================================= */
+
+  --spacing-space-micro: 4px;
+  --spacing-space-sm: 8px;
+  --spacing-space-md: 16px;
+  --spacing-space-lg: 24px;
+  --spacing-space-xl: 48px;
+  --spacing-space-xxl: 64px;
+
+  --spacing-space-gutter: 24px;
+  --spacing-space-margin-mobile: 16px;
+  --spacing-space-margin-desktop: 48px;
 }
 
-:root {
-  --background: #f7f9fe;
-  --foreground: #181c20;
-  --surface: #f7f9fe;
-  --surface-dim: #d8dadf;
-  --surface-container-lowest: #ffffff;
-  --surface-container-low: #f1f4f9;
-  --surface-container: #eceef3;
-  --surface-container-high: #e6e8ed;
-  --surface-container-highest: #e0e2e7;
-  --on-surface: #181c20;
-  --on-surface-variant: #424754;
-  --outline: #727785;
-  --outline-variant: #c2c6d6;
-
-  --primary: #3f82f7;
-  --primary-hover: #3275ec;
-  --on-primary: #ffffff;
-  --primary-container: #2670e4;
-  --on-primary-container: #fefcff;
-
-  --secondary: #dce3ed;
-  --secondary-fixed: #dce3ed;
-  --secondary-fixed-dim: #c0c7d1;
-  --on-secondary-fixed-variant: #40474f;
-
-  --tertiary: #4c5c7d;
-
-  --destructive: #ba1a1a;
-  --on-destructive: #ffffff;
-  --text-secondary: #52627a;
-  --text-muted: #8290a7;
-  --border-base: #e6ebf4;
-
-  --heatmap-low: #69c79a;
-  --heatmap-med-low: #9bd6a9;
-  --heatmap-med: #f3d96a;
-  --heatmap-high: #f5a34a;
-  --heatmap-extreme: #e74f3d;
-
-  --status-success-bg: #eaf8f2;
-  --status-success-text: #43b982;
-  --status-warning-bg: #fff3e0;
-  --status-warning-text: #f5a34a;
-  --status-error-bg: #fce8e8;
-  --status-error-text: #e74f3d;
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Shared content container — see 9.1 */
-.content-container {
-  max-width: 1320px;
-  margin-left: auto;
-  margin-right: auto;
+/* =========================================================
+   GLOBAL BASE STYLES
+   ========================================================= */
+
+body {
+  background-color: var(--background);
+  font-family: var(--font-sans);
+  color: var(--foreground);
 }
 
-/* Elevation utilities — defined once, per 9.1 (not per-page <style> blocks) */
+/* =========================================================
+   SHARED VISUAL UTILITIES
+   ========================================================= */
+
 .shadow-card,
 .soft-shadow {
   box-shadow: 0 12px 35px rgba(50, 88, 150, 0.08);
@@ -212,4 +222,20 @@
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+/* =========================================================
+   CONTENT CONTAINER
+   ========================================================= */
+
+.content-container {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-space-md);
+}
+
+@media (min-width: 768px) {
+  .content-container {
+    padding-inline: var(--spacing-space-xl);
+  }
 }

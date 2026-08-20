@@ -1,36 +1,38 @@
-// Static public footer. Terms/Privacy/Data Sources/API Documentation have no
-// routes yet — rendered as `#` placeholders per 9.4.
-export default function Footer() {
+// src/components/common/Footer.tsx
+export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border-base bg-surface-container-lowest">
-      <div className="content-container flex flex-col items-center justify-between gap-space-lg px-space-gutter py-space-xl md:flex-row">
-        <div className="flex items-center gap-2 text-card-title font-bold text-on-surface">
+    <footer className="border-t border-border-base bg-surface px-space-gutter py-space-lg">
+      <div className="content-container flex flex-col items-center justify-between gap-space-md md:flex-row">
+        <div className="flex items-center gap-2">
           <span
             className="material-symbols-outlined text-primary"
             style={{ fontVariationSettings: "'FILL' 1" }}
           >
-            travel_explore
+            public
           </span>
-          Shadow Economy Map
+
+          <span className="font-card-title text-card-title text-on-surface">
+            Shadow Economy Map
+          </span>
         </div>
 
-        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-          <a href="#" className="text-body-sm text-text-muted hover:text-primary hover:underline">
-            Terms of Service
+        <p className="font-body-sm text-body-sm text-[var(--color-text-muted)]">
+          © {new Date().getFullYear()} Shadow Economy Map. All rights reserved.
+        </p>
+
+        <div className="flex gap-4 font-body-sm text-body-sm text-[var(--color-text-muted)]">
+          <a href="#" className="hover:text-primary">
+            Terms
           </a>
-          <a href="#" className="text-body-sm text-text-muted hover:text-primary hover:underline">
-            Privacy Policy
+          <a href="#" className="hover:text-primary">
+            Privacy
           </a>
-          <a href="#" className="text-body-sm text-text-muted hover:text-primary hover:underline">
+          <a href="#" className="hover:text-primary">
             Data Sources
           </a>
-          <a href="#" className="text-body-sm text-text-muted hover:text-primary hover:underline">
+          <a href="#" className="hover:text-primary">
             API Documentation
           </a>
-        </nav>
-
-        <div className="text-body-sm text-text-secondary">
-          © 2024 Shadow Economy Map. Precision Geographic Analytics.
         </div>
       </div>
     </footer>

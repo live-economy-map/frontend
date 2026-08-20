@@ -1,66 +1,73 @@
+// src/components/common/TopNavBar.tsx
 import { Link, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
+import { cn } from '@/lib/utils';
 
-// Nav items backed by a real spec'd route. "About" appears in the Stitch
-// design but has no route in 8-1's ROUTES — left as a `#` placeholder,
-// same treatment the spec gives Footer's un-routed links.
 const NAV_LINKS = [
   { label: 'Map', to: ROUTES.MAP },
   { label: 'Case Studies', to: ROUTES.CASE_STUDIES },
   { label: 'Methodology', to: ROUTES.METHODOLOGY },
-];
+] as const;
 
-export default function TopNavBar() {
+function NavLink({ label, to, isActive }: { label: string; to: string; isActive: boolean }) {
+  return (
+    <Link
+      to={to}
+      className={cn(
+        'font-label-caps text-label-caps uppercase tracking-wider transition-colors hover:text-primary',
+        isActive ? 'border-b-2 border-primary text-primary' : 'text-on-surface-variant'
+      )}
+    >
+      {label}
+    </Link>
+  );
+}
+
+export function TopNavBar() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border-base bg-surface/80 px-space-gutter backdrop-blur-md shadow-nav">
+    <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border-base bg-surface/80 px-space-gutter shadow-nav backdrop-blur-md">
       <Link to={ROUTES.HOME} className="flex items-center gap-2">
         <span
           className="material-symbols-outlined text-primary"
           style={{ fontVariationSettings: "'FILL' 1" }}
         >
-          travel_explore
+          public
         </span>
-        <span className="text-card-title font-bold text-on-surface">Shadow Economy Map</span>
+
+        <span className="font-card-title text-card-title text-on-surface">Shadow Economy Map</span>
       </Link>
 
-      <nav className="hidden h-full items-center gap-6 md:flex">
-        {NAV_LINKS.map((link) => {
-          const isActive = location.pathname.startsWith(link.to);
-          return (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={
-                isActive
-                  ? 'flex h-full items-center border-b-2 border-primary pt-0.5 text-label-caps text-primary'
-                  : 'flex h-full items-center border-b-2 border-transparent pt-0.5 text-label-caps text-on-surface-variant transition-colors hover:border-border-base hover:text-primary'
-              }
-            >
-              {link.label}
-            </Link>
-          );
-        })}
+      <div className="hidden gap-6 md:flex">
+        {NAV_LINKS.map((link) => (
+          <NavLink
+            key={link.label}
+            label={link.label}
+            to={link.to}
+            isActive={location.pathname === link.to}
+          />
+        ))}
+
+        {/* "About" has no route/page in the spec — placeholder link, not wired */}
         <a
           href="#"
-          className="flex h-full items-center border-b-2 border-transparent pt-0.5 text-label-caps text-on-surface-variant transition-colors hover:border-border-base hover:text-primary"
+          className="font-label-caps text-label-caps uppercase tracking-wider text-on-surface-variant transition-colors hover:text-primary"
         >
           About
         </a>
-      </nav>
+      </div>
 
-      <Button asChild size="default" className="hidden md:inline-flex">
-        <Link to={ROUTES.MAP}>
-          <span className="material-symbols-outlined text-sm">map</span>
-          Explore the Map
-        </Link>
-      </Button>
+      <Link
+        to={ROUTES.MAP}
+        className="hidden rounded-lg bg-primary px-4 py-2 font-label-caps text-label-caps text-white transition-transform hover:bg-primary-hover active:scale-95 md:block"
+      >
+        Explore the Map
+      </Link>
 
       <button className="text-on-surface md:hidden" aria-label="Open menu">
         <span className="material-symbols-outlined">menu</span>
       </button>
-    </header>
+    </nav>
   );
 }

@@ -8,29 +8,23 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Request interceptor — attach JWT token to every request
 api.interceptors.request.use((config) => {
-  const authStorage = localStorage.getItem('auth-storage');
-  if (authStorage) {
+  const adminStorage = localStorage.getItem('admin-auth-storage');
+  if (adminStorage) {
     try {
-      const { state } = JSON.parse(authStorage);
+      const { state } = JSON.parse(adminStorage);
       if (state?.token) {
         config.headers.Authorization = `Bearer ${state.token}`;
       }
     } catch {
-      // malformed storage, skip attaching token
+      // malformed storage
     }
   }
   return config;
 });
 
-// Response interceptor — unwrap the backend's SuccessResponse envelope,
-// and handle 401 globally
 api.interceptors.response.use(
   (response) => {
-    // Backend always responds with { statusCode, success, message, data }.
-    // Unwrap here once so every caller can keep doing `res.data` and get
-    // the actual payload, not the envelope.
     const body = response.data as ApiResponse<unknown>;
     if (body && typeof body === 'object' && 'data' in body) {
       response.data = body.data;
@@ -38,9 +32,9 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('auth-storage');
-      window.location.href = '/login';
+    if (error.response?.status === 401 && error.config?.url?.includes('/admin/')) {
+      localStorage.removeItem('admin-auth-storage');
+      window.location.href = '/admin/login';
     }
     return Promise.reject(error);
   }

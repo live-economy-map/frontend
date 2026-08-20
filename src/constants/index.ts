@@ -1,9 +1,10 @@
+// src/constants/index.ts
+
 export const ROUTES = {
   HOME: '/',
-  LOGIN: '/login',
   MAP: '/map',
   CASE_STUDIES: '/case-studies',
-  CASE_STUDY_DETAIL: '/case-studies/:caseStudyId',
+  CASE_STUDY_DETAIL: '/case-studies/:id',
   METHODOLOGY: '/methodology',
   ADMIN_LOGIN: '/admin/login',
   ADMIN_DASHBOARD: '/admin',
@@ -14,6 +15,7 @@ export const ROUTES = {
 
 export const QUERY_KEYS = {
   MAP_CELLS: 'map-cells',
+  AVAILABLE_PERIODS: 'available-periods',
   CELL_DETAIL: 'cell-detail',
   MAP_LAYER: 'map-layer',
   CASE_STUDIES: 'case-studies',
@@ -25,9 +27,6 @@ export const QUERY_KEYS = {
   PIPELINE_RUNS: 'pipeline-runs',
   WEIGHT_CONFIGS: 'weight-configs',
   ADMIN_CASE_STUDIES: 'admin-case-studies',
-  // Add these new keys
-  USERS: 'users',
-  USER_DETAIL: 'user-detail',
 } as const;
 
 // Helper: build a concrete case-study detail path from the ROUTES pattern.

@@ -1,25 +1,29 @@
-type Status = 'success' | 'warning' | 'error' | 'neutral';
+import { cn } from '@/lib/utils';
+
+type StatusVariant = 'success' | 'warning' | 'error' | 'neutral';
 
 interface StatusBadgeProps {
-  status: Status;
+  status: StatusVariant;
   label: string;
+  className?: string;
 }
 
-const STATUS_STYLES: Record<Status, string> = {
-  success: 'bg-status-success-bg text-status-success-text',
-  warning: 'bg-status-warning-bg text-status-warning-text',
-  error: 'bg-status-error-bg text-status-error-text',
-  neutral: 'bg-surface-container text-on-surface-variant',
+const variantStyles: Record<StatusVariant, string> = {
+  success: 'bg-[var(--color-success-bg)] text-[var(--color-success)]',
+  warning: 'bg-[var(--color-warning-bg)] text-[var(--color-warning)]',
+  error: 'bg-[var(--color-danger-bg)] text-[var(--color-danger)]',
+  neutral: 'bg-muted text-muted-foreground',
 };
 
-// Consolidated success/warning/error/neutral pill — see 9.4.
-// Used by admin-pipeline/* status chips. NOT used for case-studies'
-// evidenceTier (a 4-value content category, not a success/warning/error
-// state) — that badge is rendered locally in the case-studies components.
-export default function StatusBadge({ status, label }: StatusBadgeProps) {
+// CHANGE THIS: Add 'default' before 'function'
+export default function StatusBadge({ status, label, className }: StatusBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-3 py-1 text-label-caps uppercase ${STATUS_STYLES[status]}`}
+      className={cn(
+        'inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide',
+        variantStyles[status],
+        className
+      )}
     >
       {label}
     </span>
