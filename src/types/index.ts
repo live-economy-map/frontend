@@ -125,33 +125,5 @@ export interface ScoreWeightConfig {
   weights: { sourceKey: 'VIIRS' | 'GHSL' | 'RWI'; weight: number }[];
 }
 
-// ---- Case Study Curation (admin) ----
-export interface AdminCaseStudy {
-  id: string;
-  name: string;
-  isPublished: boolean;
-  evidenceTier: string | null;
-  createdAt: string;
-}
-
-export interface CaseStudyFormInput {
-  name: string;
-  latitude: number;
-  longitude: number;
-  gridCellId?: string;
-  evidenceDescription: string;
-  evidenceUrl?: string;
-  evidenceTier?: 'OFFICIAL' | 'MARKET_REPORT' | 'INFRASTRUCTURE' | 'LOCAL_NEWS';
-  scoreRiseDate: string;
-  confirmedDate: string;
-  beforeImageUrl?: string;
-  afterImageUrl?: string;
-  isPublished?: boolean;
-}
-
-export interface DiscoveryCandidate {
-  summary: string;
-  sourceUrl: string;
-  suggestedEvidenceTier: string;
-  mentionedDate: string;
-}
+// ---- Case Study Curation (admin) & DTOs ----
+export * from './dto';
