@@ -1,4 +1,5 @@
 // src/types/index.ts
+import type { Polygon } from 'geojson';
 
 // API response shape matching your backend's ApiResponse class
 export interface ApiResponse<T> {
@@ -19,7 +20,7 @@ export interface GrowthCell {
   cellId: string;
   cellRow: number;
   cellCol: number;
-  boundaryGeoJson: GeoJSON.Polygon;
+  boundaryGeoJson: Polygon;
   compositeScore: number;
   isComplete: boolean;
 }
