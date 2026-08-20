@@ -140,22 +140,30 @@ export default function CaseStudyModal({ isOpen, onClose, initialData }: CaseStu
   const onValidSubmit = async (values: CaseStudyFormData) => {
     setFormError(null);
     try {
-      // Build clean payload matching backend schema
+      // Build clean payload matching backend schema (omit optional fields if empty)
       const payload: AdminCaseStudyPayload = {
         name: values.name.trim(),
         latitude: parseFloat(String(values.latitude)),
         longitude: parseFloat(String(values.longitude)),
         evidenceTier: values.evidenceTier,
         evidenceDescription: values.evidenceDescription.trim(),
-        // Pass clean YYYY-MM-DD date string expected by backend createCaseStudySchema
         scoreRiseDate: String(values.scoreRiseDate).split('T')[0],
         confirmedDate: String(values.confirmedDate).split('T')[0],
         isPublished: Boolean(values.isPublished),
-        evidenceUrl: values.evidenceUrl?.trim() || null,
-        beforeImageUrl: values.beforeImageUrl?.trim() || null,
-        afterImageUrl: values.afterImageUrl?.trim() || null,
-        gridCellId: values.gridCellId?.trim() || undefined,
       };
+
+      if (values.evidenceUrl && values.evidenceUrl.trim() !== '') {
+        payload.evidenceUrl = values.evidenceUrl.trim();
+      }
+      if (values.beforeImageUrl && values.beforeImageUrl.trim() !== '') {
+        payload.beforeImageUrl = values.beforeImageUrl.trim();
+      }
+      if (values.afterImageUrl && values.afterImageUrl.trim() !== '') {
+        payload.afterImageUrl = values.afterImageUrl.trim();
+      }
+      if (values.gridCellId && values.gridCellId.trim() !== '') {
+        payload.gridCellId = values.gridCellId.trim();
+      }
 
       if (isEditing && initialData?.id) {
         await updateMutation.mutateAsync({

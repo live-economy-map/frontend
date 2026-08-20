@@ -14,7 +14,6 @@ export default function GrowthMapPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlPeriod = searchParams.get('period') ?? undefined;
 
-  const [displayPeriod, setDisplayPeriod] = useState<string | undefined>(urlPeriod);
   const [selectedCellId, setSelectedCellId] = useState<string | null>(null);
   const [activeRawLayer, setActiveRawLayer] = useState<RawLayer | null>(null);
   const [zoomToCellId, setZoomToCellId] = useState<string | null>(null);
@@ -32,15 +31,24 @@ export default function GrowthMapPage() {
       .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
   }, [allPeriods]);
 
-  const validPeriod = useMemo(() => {
+  // Determine the initial period from URL or fallback to latest available
+  const defaultPeriod = useMemo(() => {
     if (availablePeriods.length === 0) return urlPeriod;
     if (urlPeriod && availablePeriods.includes(urlPeriod)) return urlPeriod;
     return availablePeriods[availablePeriods.length - 1];
   }, [urlPeriod, availablePeriods]);
 
+  // userSelectedPeriod is set immediately when the user moves the slider
+  const [userSelectedPeriod, setUserSelectedPeriod] = useState<string | null>(null);
+
+  // activePeriod drives ALL data fetching (map cells + cell detail panel)
+  const activePeriod = userSelectedPeriod ?? defaultPeriod;
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const handlePeriodChange = (period: string) => {
-    setDisplayPeriod(period);
+    // Update data-fetch period immediately so map + panel respond instantly
+    setUserSelectedPeriod(period);
+    // Debounce the URL search param update (browser history / shareable URL)
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setSearchParams((prev) => {
@@ -52,8 +60,8 @@ export default function GrowthMapPage() {
   };
   useEffect(() => () => clearTimeout(debounceRef.current), []);
 
-  const { data: cellsData, isLoading, isError, refetch } = useMapCells(validPeriod);
-  const { data: rawLayerData } = useRawLayer(activeRawLayer, validPeriod);
+  const { data: cellsData, isLoading, isError, refetch } = useMapCells(activePeriod);
+  const { data: rawLayerData } = useRawLayer(activeRawLayer, activePeriod);
 
   const valueOverride = useMemo(() => {
     if (!activeRawLayer || !rawLayerData) return undefined;
@@ -192,6 +200,7 @@ export default function GrowthMapPage() {
             ref={mapRef}
             cells={cellsData?.cells ?? []}
             valueOverride={valueOverride}
+            activeLayerLabel={activeRawLayer ? currentLayerLabel : undefined}
             onCellClick={handleCellClick}
             selectedCellId={selectedCellId}
             zoomToCellId={zoomToCellId}
@@ -202,7 +211,7 @@ export default function GrowthMapPage() {
 
           <ActivityBar
             availablePeriods={availablePeriods}
-            selectedPeriod={displayPeriod ?? validPeriod}
+            selectedPeriod={activePeriod}
             onPeriodChange={handlePeriodChange}
             isPanelOpen={!!selectedCellId}
           />
@@ -211,7 +220,8 @@ export default function GrowthMapPage() {
         {selectedCellId && (
           <CellDetailPanel
             cellId={selectedCellId}
-            period={validPeriod}
+            period={activePeriod}
+            activeLayer={activeRawLayer}
             onClose={() => {
               setSelectedCellId(null);
               setZoomToCellId(null);
