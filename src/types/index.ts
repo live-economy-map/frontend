@@ -1,4 +1,5 @@
 // src/types/index.ts
+import type { Polygon } from 'geojson';
 
 // API response shape matching your backend's ApiResponse class
 export interface ApiResponse<T> {
@@ -19,7 +20,7 @@ export interface GrowthCell {
   cellId: string;
   cellRow: number;
   cellCol: number;
-  boundaryGeoJson: GeoJSON.Polygon;
+  boundaryGeoJson: Polygon;
   compositeScore: number;
   isComplete: boolean;
 }
@@ -67,6 +68,26 @@ export interface CaseStudyDetail extends CaseStudySummary {
 }
 
 // ---- Site Content & Onboarding ----
+export interface AboutContentDTO {
+  stats: {
+    countriesMapped: number;
+    primarySourcesCount: number;
+    dataUpdateFrequency: string;
+    dataPointsAnalyzed: string;
+    totalDataPoints?: number;
+    gridCellsCount?: number;
+    snapshotsCount?: number;
+    publishedCaseStudies?: number;
+    lastDataRefresh: string | null;
+  };
+  summary: {
+    solutionBullets: string[];
+  };
+}
+
+export type AboutPageData = AboutContentDTO;
+export type AboutData = AboutContentDTO;
+
 export interface LandingContent {
   tagline: string;
   intro: string;
