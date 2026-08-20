@@ -6,6 +6,7 @@ export const QUERY_KEYS = {
   CASE_STUDY_DETAIL: 'case-study-detail',
   DISCOVER_CANDIDATES: 'discover-candidates',
   MAP_CELLS: 'map-cells',
+  AVAILABLE_PERIODS: 'available-periods',
   CELL_DETAIL: 'cell-detail',
   MAP_LAYER: 'map-layer',
   CONTENT_LANDING: 'content-landing',

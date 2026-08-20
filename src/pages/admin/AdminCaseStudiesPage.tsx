@@ -10,7 +10,12 @@ import {
   DiscoverCandidatesSidebar,
 } from '@/components/admin-case-studies';
 import { useAdminCaseStudiesList } from '@/hooks/useCaseStudies';
-import type { CaseStudyDetailDTO, DiscoveryCandidate, AdminCaseStudyPayload } from '@/types';
+import type {
+  CaseStudyDetailDTO,
+  DiscoveryCandidate,
+  AdminCaseStudyPayload,
+  EvidenceTier,
+} from '@/types';
 
 export default function AdminCaseStudiesPage() {
   const [currentPage, setCurrentPage] = useState(1);
