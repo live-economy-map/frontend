@@ -1,7 +1,7 @@
 // src/pages/LandingPage.tsx
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Database, Clock, Map, FlaskConical, Shield } from 'lucide-react';
-import { useLandingContent } from '@/hooks/useContent';
+import { ArrowRight, ChevronRight, Globe, Layers, LayoutGrid, Clock } from 'lucide-react';
+import { useAboutContent } from '@/hooks/useContent';
 
 // ── 8x8 Matrix for Satellite Density Heatmap ────────────────────────────────
 const GRID_COLORS: string[][] = [
@@ -40,41 +40,42 @@ function MiniHeatmap() {
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { data: landingData } = useLandingContent();
+  const { data: aboutData } = useAboutContent();
 
-  const publishedCount = landingData?.highlightStats?.publishedCaseStudyCount ?? 1246;
-  const lastRefresh = landingData?.highlightStats?.lastDataRefresh
-    ? new Date(landingData.highlightStats.lastDataRefresh).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })
-    : 'Oct 24, 2024';
+  const countriesCount = aboutData?.stats?.countriesMapped ?? 1;
+  const countriesDisplay = countriesCount === 1 ? '1' : `${countriesCount}+`;
+  const countriesLabel = countriesCount === 1 ? 'PILOT AREA (ETHIOPIA)' : 'COUNTRIES MAPPED';
+
+  const sourcesCount = aboutData?.stats?.primarySourcesCount?.toString() || '4';
+  const gridCellsDisplay = aboutData?.stats?.gridCellsCount
+    ? String(aboutData.stats.gridCellsCount)
+    : '238';
+  const dataPointsDisplay = aboutData?.stats?.dataPointsAnalyzed || '7.9K+';
 
   const stats = [
     {
-      icon: Database,
-      value: publishedCount.toLocaleString(),
-      label: 'DATA POINTS PUBLISHED',
-      sub: 'Manually verified & validated',
+      icon: Globe,
+      value: countriesDisplay,
+      label: countriesLabel,
+      sub: 'Addis Ababa study area',
+    },
+    {
+      icon: Layers,
+      value: sourcesCount,
+      label: 'PRIMARY SATELLITE SOURCES',
+      sub: 'VIIRS, GHSL, RWI',
+    },
+    {
+      icon: LayoutGrid,
+      value: gridCellsDisplay,
+      label: '1.5 KM² GRID CELLS',
+      sub: 'Analytical grid units',
     },
     {
       icon: Clock,
-      value: lastRefresh,
-      label: 'LAST DATA REFRESH',
-      sub: 'All data locally is valid',
-    },
-    {
-      icon: Map,
-      value: '45,231',
-      label: 'GRID CELLS ANALYZED',
-      sub: 'Global coverage',
-    },
-    {
-      icon: FlaskConical,
-      value: '3',
-      label: 'SATELLITE & DATA SOURCES',
-      sub: 'VIIRS, GHSL, RWI',
+      value: dataPointsDisplay,
+      label: 'DATA POINTS ANALYZED',
+      sub: 'Continuous signals & snapshots',
     },
   ];
 
@@ -84,26 +85,21 @@ export default function LandingPage() {
       <section className="flex-1 grid grid-cols-1 md:grid-cols-2">
         {/* Left Column: Copy & CTAs */}
         <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-20 xl:px-24 py-16 lg:py-24">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold w-fit mb-6 border border-blue-100">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-            Live Observational Intelligence
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.1] mb-2">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-2">
             Understand the
             <br />
             Hidden Economy.
           </h1>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-blue-600 tracking-tight leading-[1.1] mb-8">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-600 tracking-tight leading-tight mb-6">
             See What Others
             <br />
             Miss.
           </h2>
 
           <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-md mb-10 font-normal">
-            {landingData?.intro ||
-              'We combine high-resolution satellite data, nighttime radiance, and infrastructure signals to detect economic activity that traditional metrics cannot capture.'}
+            We combine high-resolution satellite data, nighttime radiance, and infrastructure
+            signals to detect economic activity that traditional metrics cannot capture.
           </p>
 
           <div className="flex items-center gap-5 flex-wrap">
@@ -156,7 +152,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 2. Highlight Statistics Row ── */}
+      {/* ── 2. Highlight Statistics Row (About Page Analytics) ── */}
       <section className="border-t border-gray-100 bg-white">
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-100">
           {stats.map(({ icon: Icon, value, label, sub }) => (
@@ -176,33 +172,6 @@ export default function LandingPage() {
               <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* ── 3. Bottom Transparency Banner ── */}
-      <section className="border-t border-gray-100 bg-gray-50/80 px-6 sm:px-12 lg:px-20 py-5">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-center sm:text-left">
-            <div className="w-10 h-10 rounded-xl bg-blue-100/70 flex items-center justify-center shrink-0">
-              <Shield className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-gray-900">
-                Open, Transparent, Built for Impact.
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                All data, methods, and case studies are publicly accessible. No login required. No
-                data hidden.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => navigate('/methodology')}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors whitespace-nowrap cursor-pointer"
-          >
-            About the Project
-            <ChevronRight className="h-4 w-4" />
-          </button>
         </div>
       </section>
     </div>

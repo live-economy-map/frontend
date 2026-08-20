@@ -38,37 +38,33 @@ describe('LandingPage', () => {
     expect(screen.getByLabelText(/Satellite Density Heatmap Matrix/i)).toBeInTheDocument();
     expect(screen.getByText(/Latest Severity Hotspots/i)).toBeInTheDocument();
 
-    // Default Stats
-    expect(screen.getByText('DATA POINTS PUBLISHED')).toBeInTheDocument();
-    expect(screen.getByText('LAST DATA REFRESH')).toBeInTheDocument();
-    expect(screen.getByText('GRID CELLS ANALYZED')).toBeInTheDocument();
-    expect(screen.getByText('SATELLITE & DATA SOURCES')).toBeInTheDocument();
-
-    // Transparency banner
-    expect(screen.getByText(/Open, Transparent, Built for Impact/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /About the Project/i })).toBeInTheDocument();
+    // Default Stats (from About Page Analytics)
+    expect(screen.getByText('PILOT AREA (ETHIOPIA)')).toBeInTheDocument();
+    expect(screen.getByText('PRIMARY SATELLITE SOURCES')).toBeInTheDocument();
+    expect(screen.getByText('1.5 KM² GRID CELLS')).toBeInTheDocument();
+    expect(screen.getByText('DATA POINTS ANALYZED')).toBeInTheDocument();
   });
 
-  it('renders dynamic content when backend API returns landing data', () => {
-    vi.spyOn(contentHooks, 'useLandingContent').mockReturnValue({
+  it('renders dynamic content when backend API returns analytics data', () => {
+    vi.spyOn(contentHooks, 'useAboutContent').mockReturnValue({
       data: {
-        tagline: 'Custom Tagline',
-        intro: 'Live satellite data intelligence across Ethiopia.',
-        highlightStats: {
-          publishedCaseStudyCount: 8850,
-          lastDataRefresh: '2026-08-15T00:00:00.000Z',
+        stats: {
+          countriesMapped: 3,
+          primarySourcesCount: 5,
+          gridCellsCount: 450,
+          dataPointsAnalyzed: '15.2K+',
         },
       },
       isLoading: false,
       isError: false,
-    } as unknown as ReturnType<typeof contentHooks.useLandingContent>);
+    } as unknown as ReturnType<typeof contentHooks.useAboutContent>);
 
     renderWithProviders(<LandingPage />);
 
-    expect(
-      screen.getByText(/Live satellite data intelligence across Ethiopia./i)
-    ).toBeInTheDocument();
-    expect(screen.getByText('8,850')).toBeInTheDocument();
-    expect(screen.getByText('Aug 15, 2026')).toBeInTheDocument();
+    expect(screen.getByText('3+')).toBeInTheDocument();
+    expect(screen.getByText('COUNTRIES MAPPED')).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
+    expect(screen.getByText('450')).toBeInTheDocument();
+    expect(screen.getByText('15.2K+')).toBeInTheDocument();
   });
 });
