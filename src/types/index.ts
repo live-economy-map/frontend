@@ -15,7 +15,12 @@ export interface DataSourceSignal {
   rawValue: number;
   normalizedValue: number;
 }
-
+export interface PaginatedResponse<T> {
+  items: T[];
+  page: number;
+  limit: number;
+  total: number;
+}
 export interface GrowthCell {
   cellId: string;
   cellRow: number;
@@ -57,14 +62,19 @@ export interface CaseStudySummary {
   longitude: number;
   scoreRiseDate: string;
   confirmedDate: string;
-  evidenceTier: 'OFFICIAL' | 'MARKET_REPORT' | 'INFRASTRUCTURE' | 'LOCAL_NEWS';
+  beforeImageUrl: string | null;
+  afterImageUrl: string | null;
+  evidenceDescription: string; // Add this
+  evidenceTier?: string; // Make optional
 }
 
 export interface CaseStudyDetail extends CaseStudySummary {
   evidenceDescription: string;
   evidenceUrl: string | null;
+
   beforeImageUrl: string | null;
   afterImageUrl: string | null;
+  confirmedDate: string;
 }
 
 // ---- Site Content & Onboarding ----

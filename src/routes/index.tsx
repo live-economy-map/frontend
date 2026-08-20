@@ -51,16 +51,23 @@ const router = createBrowserRouter([
       { path: ROUTES.ABOUT, element: withSuspense(<AboutPage />) },
     ],
   },
+
   // Admin login only — PublicRoute + AuthLayout
   {
     element: <PublicRoute />,
     children: [
       {
         element: <AuthLayout />,
-        children: [{ path: ROUTES.ADMIN_LOGIN, element: withSuspense(<AdminLoginPage />) }],
+        children: [
+          {
+            path: ROUTES.ADMIN_LOGIN,
+            element: withSuspense(<AdminLoginPage />),
+          },
+        ],
       },
     ],
   },
+
   // Admin area — ProtectedRoute + DashboardLayout
   {
     element: <ProtectedRoute />,
@@ -68,10 +75,22 @@ const router = createBrowserRouter([
       {
         element: <DashboardLayout />,
         children: [
-          { path: ROUTES.ADMIN_DASHBOARD, element: withSuspense(<AdminDashboardPage />) },
-          { path: ROUTES.ADMIN_PIPELINE, element: withSuspense(<PipelineManagementPage />) },
-          { path: ROUTES.ADMIN_WEIGHT_CONFIGS, element: withSuspense(<WeightConfigPage />) },
-          { path: ROUTES.ADMIN_CASE_STUDIES, element: withSuspense(<CaseStudyCurationPage />) },
+          {
+            path: ROUTES.ADMIN_DASHBOARD,
+            element: withSuspense(<AdminDashboardPage />),
+          },
+          {
+            path: ROUTES.ADMIN_PIPELINE,
+            element: withSuspense(<PipelineManagementPage />),
+          },
+          {
+            path: ROUTES.ADMIN_WEIGHT_CONFIGS,
+            element: withSuspense(<WeightConfigPage />),
+          },
+          {
+            path: ROUTES.ADMIN_CASE_STUDIES,
+            element: withSuspense(<CaseStudyCurationPage />),
+          },
         ],
       },
     ],
