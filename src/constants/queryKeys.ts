@@ -11,6 +11,7 @@ export const QUERY_KEYS = {
   MAP_LAYER: 'map-layer',
   CONTENT_LANDING: 'content-landing',
   CONTENT_METHODOLOGY: 'content-methodology',
+  CONTENT_ABOUT: 'content-about',
   ADMIN_ME: 'admin-me',
   PIPELINE_SOURCES: 'pipeline-sources',
   PIPELINE_RUNS: 'pipeline-runs',
