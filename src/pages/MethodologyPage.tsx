@@ -1,14 +1,6 @@
 // src/pages/MethodologyPage.tsx
 import { useNavigate } from 'react-router-dom';
-import {
-  Satellite,
-  Activity,
-  ShieldCheck,
-  ArrowRight,
-  Database,
-  Search,
-  CheckCircle2,
-} from 'lucide-react';
+import { Activity, ShieldCheck, ArrowRight, Database, Search, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function MethodologyPage() {
@@ -61,11 +53,6 @@ export default function MethodologyPage() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 space-y-16">
         {/* ── 1. Header & Overview ── */}
         <section className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
-            <Satellite className="w-3.5 h-3.5" />
-            <span>Scientific Framework & Data Architecture</span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
             Methodology & <span className="text-blue-600">Earth Observation</span>
           </h1>

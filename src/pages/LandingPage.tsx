@@ -274,10 +274,6 @@ export default function LandingPage() {
       <section className="border-t border-gray-100 bg-gradient-to-b from-white to-blue-50/30 py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
-              <Satellite className="w-3.5 h-3.5" />
-              <span>Multi-Sensor Modalities</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
               Orbital Signals Powering the Index
             </h2>
@@ -403,10 +399,6 @@ export default function LandingPage() {
       <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50/60 to-white py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
-              <Cpu className="w-3.5 h-3.5" />
-              <span>Algorithmic Workflow</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
               From Raw Orbit to Verified Insights
             </h2>
