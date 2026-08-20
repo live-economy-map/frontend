@@ -1,7 +1,7 @@
 // src/components/layouts/PublicLayout.tsx
 import { useState } from 'react';
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Shield } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
@@ -61,8 +61,12 @@ export default function PublicLayout() {
             onClick={() => navigate('/map')}
             className="hidden md:inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
           >
-            <Shield className="h-4 w-4" />
-            Explore the Map
+            <img
+              src="/ecolens-tr.png"
+              alt="EcoLens"
+              className="h-4 w-auto brightness-0 invert object-contain"
+            />
+            <span>Explore the Map</span>
           </button>
 
           {/* Mobile Hamburger Toggle */}

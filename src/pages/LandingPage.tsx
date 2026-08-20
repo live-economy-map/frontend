@@ -205,10 +205,15 @@ export default function LandingPage() {
           <div className="flex items-center gap-4 flex-wrap">
             <button
               onClick={() => navigate('/map')}
-              className="inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 sm:px-7 py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg shadow-blue-500/20 active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 sm:px-7 py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg shadow-blue-500/20 active:scale-[0.98] cursor-pointer group"
             >
-              Explore the Map
-              <ArrowRight className="h-4 w-4" />
+              <img
+                src="/ecolens-tr.png"
+                alt="EcoLens"
+                className="h-4.5 w-auto brightness-0 invert object-contain"
+              />
+              <span>Explore the Map</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </button>
 
             <button
@@ -517,10 +522,15 @@ export default function LandingPage() {
           <div className="flex items-center gap-4 flex-wrap justify-center">
             <button
               onClick={() => navigate('/map')}
-              className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer group"
             >
-              Launch Interactive Map
-              <ArrowRight className="h-4 w-4" />
+              <img
+                src="/ecolens-tr.png"
+                alt="EcoLens"
+                className="h-4.5 w-auto brightness-0 invert object-contain"
+              />
+              <span>Launch Interactive Map</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </button>
 
             <button

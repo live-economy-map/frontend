@@ -220,8 +220,13 @@ export default function AboutPage() {
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             <Button
               onClick={() => navigate(ROUTES.MAP)}
-              className="bg-primary hover:bg-primary/90 text-white rounded-xl shadow-sm text-sm font-semibold h-11 px-5 gap-2 w-full sm:w-auto justify-center"
+              className="bg-primary hover:bg-primary-hover text-white flex items-center gap-2 rounded-xl px-5 cursor-pointer"
             >
+              <img
+                src="/ecolens-tr.png"
+                alt="EcoLens"
+                className="h-4 w-auto brightness-0 invert object-contain"
+              />
               <span>Explore the Map</span>
               <ArrowRight className="w-4 h-4" />
             </Button>

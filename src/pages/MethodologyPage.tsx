@@ -145,8 +145,13 @@ export default function MethodologyPage() {
           <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
             <Button
               onClick={() => navigate('/map')}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm px-6 h-11 gap-2 cursor-pointer"
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm px-6 h-11 gap-2 cursor-pointer flex items-center"
             >
+              <img
+                src="/ecolens-tr.png"
+                alt="EcoLens"
+                className="h-4 w-auto brightness-0 invert object-contain"
+              />
               <span>Launch Map</span>
               <ArrowRight className="w-4 h-4" />
             </Button>

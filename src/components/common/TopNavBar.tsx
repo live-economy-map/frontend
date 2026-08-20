@@ -51,9 +51,14 @@ export function TopNavBar() {
 
       <Link
         to={ROUTES.MAP}
-        className="hidden rounded-lg bg-primary px-4 py-2 font-label-caps text-label-caps text-white transition-transform hover:bg-primary-hover active:scale-95 md:block"
+        className="hidden md:inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-label-caps text-label-caps text-white transition-transform hover:bg-primary-hover active:scale-95"
       >
-        Explore the Map
+        <img
+          src="/ecolens-tr.png"
+          alt="EcoLens"
+          className="h-4 w-auto brightness-0 invert object-contain"
+        />
+        <span>Explore the Map</span>
       </Link>
 
       <button className="text-on-surface md:hidden" aria-label="Open menu">
