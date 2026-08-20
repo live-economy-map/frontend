@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMapCells, useRawLayer, useAvailablePeriods } from '@/hooks/useMap';
-import { getDefaultPeriodRange } from '@/lib/periods';
 import GrowthMapCanvas, { type GrowthMapCanvasRef } from '@/components/map/GrowthMapCanvas';
 import ActivityBar from '@/components/map/ActivityBar';
 import MapToolbar from '@/components/map/MapToolbar';
@@ -15,7 +14,6 @@ export default function GrowthMapPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlPeriod = searchParams.get('period') ?? undefined;
 
-  const [displayPeriod, setDisplayPeriod] = useState<string | undefined>(urlPeriod);
   const [selectedCellId, setSelectedCellId] = useState<string | null>(null);
   const [activeRawLayer, setActiveRawLayer] = useState<RawLayer | null>(null);
   const [zoomToCellId, setZoomToCellId] = useState<string | null>(null);
@@ -25,18 +23,32 @@ export default function GrowthMapPage() {
   const mapRef = useRef<GrowthMapCanvasRef>(null);
 
   const { data: periodsData } = useAvailablePeriods();
-  const allPeriods = periodsData?.all ?? [];
-  const availablePeriods = allPeriods.length > 0 ? allPeriods : getDefaultPeriodRange();
+  const allPeriods = periodsData?.all;
+  const availablePeriods = useMemo(() => {
+    if (!allPeriods || !Array.isArray(allPeriods)) return [];
+    return [...allPeriods]
+      .filter(Boolean)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  }, [allPeriods]);
 
-  const validPeriod = useMemo(() => {
-    if (availablePeriods.length === 0) return undefined;
+  // Determine the initial period from URL or fallback to latest available
+  const defaultPeriod = useMemo(() => {
+    if (availablePeriods.length === 0) return urlPeriod;
     if (urlPeriod && availablePeriods.includes(urlPeriod)) return urlPeriod;
     return availablePeriods[availablePeriods.length - 1];
   }, [urlPeriod, availablePeriods]);
 
+  // userSelectedPeriod is set immediately when the user moves the slider
+  const [userSelectedPeriod, setUserSelectedPeriod] = useState<string | null>(null);
+
+  // activePeriod drives ALL data fetching (map cells + cell detail panel)
+  const activePeriod = userSelectedPeriod ?? defaultPeriod;
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const handlePeriodChange = (period: string) => {
-    setDisplayPeriod(period);
+    // Update data-fetch period immediately so map + panel respond instantly
+    setUserSelectedPeriod(period);
+    // Debounce the URL search param update (browser history / shareable URL)
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setSearchParams((prev) => {
@@ -48,8 +60,8 @@ export default function GrowthMapPage() {
   };
   useEffect(() => () => clearTimeout(debounceRef.current), []);
 
-  const { data: cellsData, isLoading, isError, refetch } = useMapCells(validPeriod);
-  const { data: rawLayerData } = useRawLayer(activeRawLayer, validPeriod);
+  const { data: cellsData, isLoading, isError, refetch } = useMapCells(activePeriod);
+  const { data: rawLayerData } = useRawLayer(activeRawLayer, activePeriod);
 
   const valueOverride = useMemo(() => {
     if (!activeRawLayer || !rawLayerData) return undefined;
@@ -162,6 +174,14 @@ export default function GrowthMapPage() {
             </div>
           </div>
 
+          {/* Fallback Notice Banner */}
+          {cellsData?.periodSubstituted && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-amber-500/95 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg flex items-center gap-2 border border-amber-400/50">
+              <span className="material-symbols-outlined text-sm">info</span>
+              <span>No data for requested period — showing {cellsData.period}</span>
+            </div>
+          )}
+
           {isLoading && (
             <div className="absolute inset-0 z-40 flex items-center justify-center bg-surface/60">
               <span className="text-body-sm text-text-muted">Loading map…</span>
@@ -180,6 +200,7 @@ export default function GrowthMapPage() {
             ref={mapRef}
             cells={cellsData?.cells ?? []}
             valueOverride={valueOverride}
+            activeLayerLabel={activeRawLayer ? currentLayerLabel : undefined}
             onCellClick={handleCellClick}
             selectedCellId={selectedCellId}
             zoomToCellId={zoomToCellId}
@@ -190,15 +211,17 @@ export default function GrowthMapPage() {
 
           <ActivityBar
             availablePeriods={availablePeriods}
-            selectedPeriod={displayPeriod ?? validPeriod}
+            selectedPeriod={activePeriod}
             onPeriodChange={handlePeriodChange}
+            isPanelOpen={!!selectedCellId}
           />
         </div>
 
         {selectedCellId && (
           <CellDetailPanel
             cellId={selectedCellId}
-            period={validPeriod}
+            period={activePeriod}
+            activeLayer={activeRawLayer}
             onClose={() => {
               setSelectedCellId(null);
               setZoomToCellId(null);

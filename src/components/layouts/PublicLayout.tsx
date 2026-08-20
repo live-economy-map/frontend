@@ -1,10 +1,11 @@
 // src/components/layouts/PublicLayout.tsx
 import { useState } from 'react';
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Shield } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
+  { to: '/', label: 'Home' },
   { to: '/map', label: 'Map' },
   { to: '/case-studies', label: 'Case Studies' },
   { to: '/methodology', label: 'Methodology' },
@@ -28,11 +29,13 @@ export default function PublicLayout() {
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur border-b border-gray-200 shrink-0">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
-          <NavLink to="/" className="flex items-center gap-2.5 font-bold text-gray-900">
-            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm">
-              <Shield className="h-4 w-4" />
-            </div>
-            <span className="text-base font-bold tracking-tight">Shadow Economy Map</span>
+          <NavLink to="/" className="flex items-center gap-2.5 font-bold text-gray-900 group">
+            <img
+              src="/ecolens-tr.png"
+              alt="EcoLens Logo"
+              className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+            />
+            <span className="text-lg font-bold tracking-tight text-gray-900">EcoLens</span>
           </NavLink>
 
           {/* Desktop Navigation Links */}
@@ -41,6 +44,7 @@ export default function PublicLayout() {
               <NavLink
                 key={to}
                 to={to}
+                end={to === '/'}
                 className={({ isActive }) =>
                   cn(
                     'text-sm font-medium transition-colors hover:text-blue-600',
@@ -58,8 +62,12 @@ export default function PublicLayout() {
             onClick={() => navigate('/map')}
             className="hidden md:inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all shadow-sm active:scale-95 cursor-pointer"
           >
-            <Shield className="h-4 w-4" />
-            Explore the Map
+            <img
+              src="/ecolens-tr.png"
+              alt="EcoLens"
+              className="h-4 w-auto brightness-0 invert object-contain"
+            />
+            <span>Explore the Map</span>
           </button>
 
           {/* Mobile Hamburger Toggle */}
@@ -79,6 +87,7 @@ export default function PublicLayout() {
               <NavLink
                 key={to}
                 to={to}
+                end={to === '/'}
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
                   cn(
@@ -105,9 +114,12 @@ export default function PublicLayout() {
       {!isMapPage && (
         <footer className="border-t border-gray-100 bg-white py-6 shrink-0">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-gray-400">
-              © {new Date().getFullYear()} Shadow Economy Map. All rights reserved.
-            </p>
+            <div className="flex items-center gap-2.5">
+              <img src="/ecolens-tr.png" alt="EcoLens" className="h-6 w-auto object-contain" />
+              <p className="text-xs text-gray-500 font-medium">
+                © {new Date().getFullYear()} EcoLens. All rights reserved.
+              </p>
+            </div>
             <div className="flex items-center gap-6">
               <Link
                 to="/methodology"

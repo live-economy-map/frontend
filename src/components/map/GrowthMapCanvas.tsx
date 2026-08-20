@@ -3,26 +3,23 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import type { Layer } from 'leaflet';
 import type { GrowthCell } from '@/types';
 
-const HEATMAP_COLORS = ['#69C79A', '#9BD6A9', '#F3D96A', '#F5A34A', '#E74F3D'];
-
 function scoreToColor(score: number): string {
-  if (score < 0.2) return HEATMAP_COLORS[0];
-  if (score < 0.4) return HEATMAP_COLORS[1];
-  if (score < 0.6) return HEATMAP_COLORS[2];
-  if (score < 0.8) return HEATMAP_COLORS[3];
-  return HEATMAP_COLORS[4];
+  if (score >= 0.85) return '#991b1b'; // Deep Red
+  if (score >= 0.7) return '#dc2626'; // Red
+  if (score >= 0.55) return '#f97316'; // Orange
+  if (score >= 0.41) return '#fb923c'; // Amber / Light Orange
+  if (score >= 0.18) return '#fcd34d'; // Yellow
+  return '#bbf7d0'; // Light Green
 }
 
 function getStatus(score: number): { label: string; color: string; bg: string } {
   if (score >= 0.7) {
-    return { label: 'High', color: '#E74F3D', bg: '#E74F3D20' };
+    return { label: 'High', color: '#dc2626', bg: '#dc262620' };
   }
-
   if (score >= 0.4) {
-    return { label: 'Medium', color: '#E87C3C', bg: '#E87C3C20' };
+    return { label: 'Medium', color: '#f97316', bg: '#f9731620' };
   }
-
-  return { label: 'Low', color: '#69C79A', bg: '#69C79A20' };
+  return { label: 'Low', color: '#16a34a', bg: '#16a34a20' };
 }
 
 const ADDIS_ABABA_CENTER: [number, number] = [9.03, 38.74];
@@ -94,6 +91,7 @@ export interface GrowthMapCanvasRef {
 interface GrowthMapCanvasProps {
   cells: GrowthCell[];
   valueOverride?: Map<string, number>;
+  activeLayerLabel?: string;
   onCellClick: (cellId: string) => void;
   selectedCellId: string | null;
   zoomToCellId?: string | null;
@@ -102,7 +100,15 @@ interface GrowthMapCanvasProps {
 
 const GrowthMapCanvas = forwardRef<GrowthMapCanvasRef, GrowthMapCanvasProps>(
   (
-    { cells, valueOverride, onCellClick, selectedCellId, zoomToCellId, highlightedCellIds = [] },
+    {
+      cells,
+      valueOverride,
+      activeLayerLabel,
+      onCellClick,
+      selectedCellId,
+      zoomToCellId,
+      highlightedCellIds = [],
+    },
     ref
   ) => {
     const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
@@ -123,22 +129,47 @@ const GrowthMapCanvas = forwardRef<GrowthMapCanvasRef, GrowthMapCanvasProps>(
       return cells.find((c) => c.cellId === hoveredCellId) ?? null;
     }, [cells, hoveredCellId]);
 
+    const hoveredScore = useMemo(() => {
+      if (!hoveredCell) return 0;
+      return valueOverride?.get(hoveredCell.cellId) ?? hoveredCell.compositeScore;
+    }, [hoveredCell, valueOverride]);
+
     const featureCollection = useMemo(
       () => ({
         type: 'FeatureCollection' as const,
-        features: cells.map((cell) => ({
-          type: 'Feature' as const,
-          geometry: cell.boundaryGeoJson,
-          properties: {
-            cellId: cell.cellId,
-            score: valueOverride?.get(cell.cellId) ?? cell.compositeScore,
-            isComplete: valueOverride ? true : cell.isComplete,
-            isHighlighted: highlightedCellIds.includes(cell.cellId),
-          },
-        })),
+        features: cells.map((cell) => {
+          let geom = cell.boundaryGeoJson;
+          if (typeof geom === 'string') {
+            try {
+              geom = JSON.parse(geom);
+            } catch {
+              // fallback
+            }
+          }
+          return {
+            type: 'Feature' as const,
+            geometry: geom,
+            properties: {
+              cellId: cell.cellId,
+              score: valueOverride?.get(cell.cellId) ?? cell.compositeScore,
+              isComplete: valueOverride ? true : cell.isComplete,
+              isHighlighted: highlightedCellIds.includes(cell.cellId),
+            },
+          };
+        }),
       }),
       [cells, valueOverride, highlightedCellIds]
     );
+
+    // Build a unique key fingerprint that changes whenever the underlying scores change.
+    // React-Leaflet's <GeoJSON> ignores data prop changes — it only re-renders on key change.
+    const geoJsonKey = useMemo(() => {
+      const scoreSample = cells
+        .slice(0, 5)
+        .map((c) => (valueOverride?.get(c.cellId) ?? c.compositeScore).toFixed(4))
+        .join('-');
+      return `geojson-${cells.length}-${scoreSample}-${selectedCellId ?? 'x'}-${valueOverride ? 'raw' : 'comp'}`;
+    }, [cells, valueOverride, selectedCellId]);
 
     // Expose zoom methods to parent
     useImperativeHandle(ref, () => ({
@@ -154,14 +185,6 @@ const GrowthMapCanvas = forwardRef<GrowthMapCanvasRef, GrowthMapCanvasProps>(
         if (map) map.zoomOut();
       },
     }));
-
-    if (cells.length === 0) {
-      return (
-        <div className="relative w-full h-full bg-surface/50 flex items-center justify-center z-10">
-          <span className="text-body-sm text-text-muted">No data available for this period.</span>
-        </div>
-      );
-    }
 
     return (
       <MapContainer
@@ -187,56 +210,70 @@ const GrowthMapCanvas = forwardRef<GrowthMapCanvasRef, GrowthMapCanvasProps>(
 
         {zoomTarget && <AutoZoom boundaryGeoJson={zoomTarget} />}
 
-        <GeoJSON
-          key={selectedCellId ?? 'none'}
-          data={featureCollection as GeoJSON.FeatureCollection}
-          style={(feature) => {
-            const isSelected = feature?.properties.cellId === selectedCellId;
-            const isHovered = feature?.properties.cellId === hoveredCellId;
-            const isHighlighted = feature?.properties.isHighlighted ?? false;
-            const score = feature?.properties.score ?? 0;
-            const isComplete = feature?.properties.isComplete ?? false;
+        {cells.length === 0 && (
+          <div className="absolute inset-0 z-[1000] flex items-center justify-center bg-surface/60 pointer-events-none">
+            <span className="text-body-sm text-text-muted">No data available for this period.</span>
+          </div>
+        )}
 
-            let fillOpacity = isHighlighted ? 0.7 : 0.35;
+        {cells.length > 0 && (
+          <GeoJSON
+            key={geoJsonKey}
+            data={featureCollection as GeoJSON.FeatureCollection}
+            style={(feature) => {
+              const isSelected = feature?.properties.cellId === selectedCellId;
+              const isHovered = feature?.properties.cellId === hoveredCellId;
+              const isHighlighted = feature?.properties.isHighlighted ?? false;
+              const score = feature?.properties.score ?? 0;
+              const isComplete = feature?.properties.isComplete ?? false;
 
-            if (isSelected || isHovered) {
-              fillOpacity = 0.7;
-            }
+              if (!isComplete) {
+                return {
+                  fillColor: isSelected || isHovered ? '#93c5fd' : '#cbd5e1',
+                  fillOpacity: isSelected || isHovered ? 0.6 : isHighlighted ? 0.5 : 0.25,
+                  color: isSelected
+                    ? '#1d4ed8'
+                    : isHovered
+                      ? '#2563eb'
+                      : isHighlighted
+                        ? '#3b82f6'
+                        : '#94a3b8',
+                  weight: isSelected ? 3 : isHovered ? 2.5 : isHighlighted ? 2 : 1,
+                  dashArray: isSelected || isHighlighted ? undefined : '3, 3',
+                };
+              }
 
-            if (!isComplete) {
               return {
-                fillColor: 'url(#incomplete-hatch)',
-                fillOpacity: isHighlighted ? 0.5 : 0.2,
-                color: isSelected ? '#3F82F7' : isHighlighted ? '#3F82F7' : '#c2c6d6',
-                weight: isSelected ? 2 : isHighlighted ? 2 : 0.5,
-                dashArray: isSelected || isHighlighted ? undefined : '4',
+                fillColor: scoreToColor(score),
+                fillOpacity: isSelected || isHovered ? 0.8 : isHighlighted ? 0.7 : 0.45,
+                color: isSelected
+                  ? '#1d4ed8'
+                  : isHovered
+                    ? '#2563eb'
+                    : isHighlighted
+                      ? '#3b82f6'
+                      : '#64748b',
+                weight: isSelected ? 3 : isHovered ? 2 : isHighlighted ? 2 : 0.75,
               };
-            }
+            }}
+            onEachFeature={(feature, layer: Layer) => {
+              layer.on('click', () => onCellClick(feature.properties.cellId));
 
-            return {
-              fillColor: scoreToColor(score),
-              fillOpacity,
-              color: isSelected ? '#3F82F7' : isHighlighted ? '#3F82F7' : 'transparent',
-              weight: isSelected ? 2 : isHighlighted ? 2 : 0,
-            };
-          }}
-          onEachFeature={(feature, layer: Layer) => {
-            layer.on('click', () => onCellClick(feature.properties.cellId));
-
-            layer.on('mouseover', (e) => {
-              setHoveredCellId(feature.properties.cellId);
-              setTooltipPos({
-                x: e.originalEvent.clientX,
-                y: e.originalEvent.clientY,
+              layer.on('mouseover', (e) => {
+                setHoveredCellId(feature.properties.cellId);
+                setTooltipPos({
+                  x: e.originalEvent.clientX,
+                  y: e.originalEvent.clientY,
+                });
               });
-            });
 
-            layer.on('mouseout', () => {
-              setHoveredCellId(null);
-              setTooltipPos(null);
-            });
-          }}
-        />
+              layer.on('mouseout', () => {
+                setHoveredCellId(null);
+                setTooltipPos(null);
+              });
+            }}
+          />
+        )}
 
         {hoveredCell && tooltipPos && (
           <div
@@ -255,31 +292,37 @@ const GrowthMapCanvas = forwardRef<GrowthMapCanvasRef, GrowthMapCanvasProps>(
               <span
                 className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold border"
                 style={{
-                  backgroundColor: getStatus(hoveredCell.compositeScore).bg,
-                  borderColor: getStatus(hoveredCell.compositeScore).color + '40',
-                  color: getStatus(hoveredCell.compositeScore).color,
+                  backgroundColor: getStatus(hoveredScore).bg,
+                  borderColor: getStatus(hoveredScore).color + '40',
+                  color: getStatus(hoveredScore).color,
                 }}
               >
-                {getStatus(hoveredCell.compositeScore).label}
+                {getStatus(hoveredScore).label}
               </span>
             </div>
 
-            <div className="flex items-end gap-1 mb-2">
+            <div className="flex items-end justify-between gap-1 mb-1">
               <div className="font-data-kpi text-xl text-on-surface font-bold">
-                {(hoveredCell.compositeScore * 100).toFixed(1)}%
+                {(hoveredScore * 100).toFixed(1)}%
               </div>
 
               <div className="text-[11px] mb-1 flex items-center gap-0.5">
                 <span
                   className="material-symbols-outlined text-sm"
                   style={{
-                    color: hoveredCell.compositeScore > 0.5 ? '#43B982' : '#E74F3D',
+                    color: hoveredScore > 0.5 ? '#43B982' : '#E74F3D',
                   }}
                 >
-                  {hoveredCell.compositeScore > 0.5 ? 'trending_up' : 'trending_down'}
+                  {hoveredScore > 0.5 ? 'trending_up' : 'trending_down'}
                 </span>
               </div>
             </div>
+
+            {activeLayerLabel && (
+              <div className="text-[10px] text-text-muted font-medium mb-1.5">
+                Layer: <span className="text-primary font-semibold">{activeLayerLabel}</span>
+              </div>
+            )}
 
             <div className="pt-1.5 border-t border-border-base flex items-center justify-end text-[11px] text-primary">
               <span>Click for details</span>

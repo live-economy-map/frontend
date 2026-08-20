@@ -5,12 +5,14 @@ interface ActivityBarProps {
   availablePeriods: string[];
   selectedPeriod: string | undefined;
   onPeriodChange: (period: string) => void;
+  isPanelOpen?: boolean;
 }
 
 export default function ActivityBar({
   availablePeriods,
   selectedPeriod,
   onPeriodChange,
+  isPanelOpen = false,
 }: ActivityBarProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showTimelineDropdown, setShowTimelineDropdown] = useState(false);
@@ -86,7 +88,7 @@ export default function ActivityBar({
       }
 
       updateIndex(nextIndex);
-    }, 1500);
+    }, 1800);
   }, [maxIndex, selectedIndex, stopPlayback, totalPeriods, updateIndex]);
 
   const handlePlayToggle = () => {
@@ -132,8 +134,12 @@ export default function ActivityBar({
   }
 
   return (
-    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-[min(1180px,92vw)] bg-surface-container-lowest border border-border-base rounded-xl shadow-ambient px-4 py-3">
-      <div className="flex items-center gap-6">
+    <div
+      className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-[min(1180px,calc(100%-2rem))] max-w-[calc(100%-2rem)] bg-surface-container-lowest border border-border-base rounded-xl shadow-ambient px-4 py-3 transition-all duration-200 ${
+        isPanelOpen ? 'hidden md:block' : 'block'
+      }`}
+    >
+      <div className="flex items-center gap-3 sm:gap-6">
         <button
           onClick={handlePlayToggle}
           aria-label={isPlaying ? 'Pause' : 'Play'}
@@ -144,7 +150,7 @@ export default function ActivityBar({
           </span>
         </button>
 
-        <div className="w-[140px] shrink-0">
+        <div className="w-[120px] sm:w-[140px] shrink-0 hidden sm:block">
           <div className="flex items-center gap-2">
             <span className="text-[13px] font-semibold text-on-surface">Activity Trend</span>
 
@@ -156,7 +162,7 @@ export default function ActivityBar({
           <span className="block text-[10px] text-text-muted mt-0.5">Past to Present</span>
         </div>
 
-        <div className="flex-1 relative h-[58px] min-w-0 mr-12">
+        <div className="flex-1 relative h-[58px] min-w-0 mr-4 sm:mr-8">
           <div className="absolute left-0 right-0 top-[16px] h-[3px] bg-primary/20 rounded-full" />
 
           <div
@@ -177,7 +183,7 @@ export default function ActivityBar({
           />
 
           {availablePeriods.map((period, idx) => {
-            const position = maxIndex > 0 ? (idx / maxIndex) * 100 : 0;
+            const position = maxIndex > 0 ? (idx / maxIndex) * 100 : 50;
 
             const isSelected = idx === displayIndex;
             const isPast = idx <= displayIndex;
@@ -204,14 +210,17 @@ export default function ActivityBar({
                 ) : (
                   <>
                     <div
-                      className={`absolute left-1/2 -translate-x-1/2 top-[13px] w-[5px] h-[5px] rounded-full ${
+                      className={`absolute left-1/2 -translate-x-1/2 top-[13px] w-[5px] h-[5px] rounded-full transition-colors ${
                         isPast ? 'bg-primary' : 'bg-border-base'
                       }`}
                     />
 
-                    <span className="absolute left-1/2 -translate-x-1/2 top-[38px] text-[10px] text-text-muted whitespace-nowrap">
-                      {shortLabel(period)}
-                    </span>
+                    {/* Only display unselected text labels if there are few periods (<= 5) on wide viewports to prevent cramped clutter */}
+                    {availablePeriods.length <= 5 && (
+                      <span className="hidden md:inline-block absolute left-1/2 -translate-x-1/2 top-[38px] text-[10px] text-text-muted whitespace-nowrap">
+                        {shortLabel(period)}
+                      </span>
+                    )}
                   </>
                 )}
               </div>

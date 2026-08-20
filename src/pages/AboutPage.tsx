@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   MapPin,
   ArrowRight,
-  Sparkles,
   Database,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -75,11 +74,6 @@ export default function AboutPage() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16 space-y-12 sm:space-y-16">
         {/* ── 1. Hero Title & Introduction ── */}
         <section className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Economic Intelligence & Earth Observation</span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
             Shining Light on the{' '}
             <span className="text-primary">
@@ -154,10 +148,8 @@ export default function AboutPage() {
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-primary font-medium text-[11px]">
-                  Cadence: {aboutData.stats.dataUpdateFrequency || 'Monthly / On-Demand'}
-                </span>
+              <div className="flex items-center gap-2 text-[11px] font-medium text-primary">
+                <span>Cadence: {aboutData.stats.dataUpdateFrequency || 'Monthly / On-Demand'}</span>
               </div>
             </div>
           )}
@@ -167,9 +159,6 @@ export default function AboutPage() {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
           {/* Left Column: Problem / Gap */}
           <div className="lg:col-span-6 flex flex-col justify-center space-y-4">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-              <span>The Data Blindspot</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               The Gap in Economic Data
             </h2>
@@ -231,8 +220,13 @@ export default function AboutPage() {
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             <Button
               onClick={() => navigate(ROUTES.MAP)}
-              className="bg-primary hover:bg-primary/90 text-white rounded-xl shadow-sm text-sm font-semibold h-11 px-5 gap-2 w-full sm:w-auto justify-center"
+              className="bg-primary hover:bg-primary-hover text-white flex items-center gap-2 rounded-xl px-5 cursor-pointer"
             >
+              <img
+                src="/ecolens-tr.png"
+                alt="EcoLens"
+                className="h-4 w-auto brightness-0 invert object-contain"
+              />
               <span>Explore the Map</span>
               <ArrowRight className="w-4 h-4" />
             </Button>

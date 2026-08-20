@@ -10,20 +10,12 @@ export function Footer() {
           to={ROUTES.HOME}
           className="flex items-center gap-2 hover:opacity-90 transition-opacity"
         >
-          <span
-            className="material-symbols-outlined text-primary"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            public
-          </span>
-
-          <span className="font-card-title text-card-title text-on-surface">
-            Shadow Economy Map
-          </span>
+          <img src="/ecolens-tr.png" alt="EcoLens" className="h-7 w-auto object-contain" />
+          <span className="font-bold text-base text-on-surface">EcoLens</span>
         </Link>
 
         <p className="font-body-sm text-body-sm text-[var(--color-text-muted)]">
-          © {new Date().getFullYear()} Shadow Economy Map. All rights reserved.
+          © {new Date().getFullYear()} EcoLens. All rights reserved.
         </p>
 
         <div className="flex flex-wrap gap-5 font-body-sm text-body-sm text-[var(--color-text-muted)]">

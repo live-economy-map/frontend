@@ -4,6 +4,7 @@ import { ROUTES } from '@/constants';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
+  { label: 'Home', to: ROUTES.HOME },
   { label: 'Map', to: ROUTES.MAP },
   { label: 'Case Studies', to: ROUTES.CASE_STUDIES },
   { label: 'Methodology', to: ROUTES.METHODOLOGY },
@@ -29,15 +30,13 @@ export function TopNavBar() {
 
   return (
     <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border-base bg-surface/80 px-space-gutter shadow-nav backdrop-blur-md">
-      <Link to={ROUTES.HOME} className="flex items-center gap-2">
-        <span
-          className="material-symbols-outlined text-primary"
-          style={{ fontVariationSettings: "'FILL' 1" }}
-        >
-          public
-        </span>
-
-        <span className="font-card-title text-card-title text-on-surface">Shadow Economy Map</span>
+      <Link to={ROUTES.HOME} className="flex items-center gap-2.5 group">
+        <img
+          src="/ecolens-tr.png"
+          alt="EcoLens Logo"
+          className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+        />
+        <span className="font-bold text-lg text-on-surface">EcoLens</span>
       </Link>
 
       <div className="hidden gap-6 md:flex">
@@ -53,9 +52,14 @@ export function TopNavBar() {
 
       <Link
         to={ROUTES.MAP}
-        className="hidden rounded-lg bg-primary px-4 py-2 font-label-caps text-label-caps text-white transition-transform hover:bg-primary-hover active:scale-95 md:block"
+        className="hidden md:inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-label-caps text-label-caps text-white transition-transform hover:bg-primary-hover active:scale-95"
       >
-        Explore the Map
+        <img
+          src="/ecolens-tr.png"
+          alt="EcoLens"
+          className="h-4 w-auto brightness-0 invert object-contain"
+        />
+        <span>Explore the Map</span>
       </Link>
 
       <button className="text-on-surface md:hidden" aria-label="Open menu">

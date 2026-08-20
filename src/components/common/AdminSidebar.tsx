@@ -1,15 +1,15 @@
-// src/components/common/AdminSidebar.tsx
 import { Link, useLocation } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { Activity, SlidersHorizontal, BookOpen, LogOut, ArrowLeft } from 'lucide-react';
 import api from '@/lib/axios';
 import { ROUTES } from '@/constants';
 import { useAdminAuthStore } from '@/store/adminAuth.store';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
-  { label: 'Pipeline', to: ROUTES.ADMIN_PIPELINE, icon: 'account_tree' },
-  { label: 'Weight Config', to: ROUTES.ADMIN_WEIGHT_CONFIGS, icon: 'tune' },
-  { label: 'Case Studies', to: ROUTES.ADMIN_CASE_STUDIES, icon: 'library_books' },
+  { label: 'Pipeline Health', to: ROUTES.ADMIN_PIPELINE, icon: Activity },
+  { label: 'Weight Config', to: ROUTES.ADMIN_WEIGHT_CONFIGS, icon: SlidersHorizontal },
+  { label: 'Case Studies', to: ROUTES.ADMIN_CASE_STUDIES, icon: BookOpen },
 ] as const;
 
 export function AdminSidebar() {
@@ -17,69 +17,92 @@ export function AdminSidebar() {
   const logout = useAdminAuthStore((s) => s.logout);
   const admin = useAdminAuthStore((s) => s.admin);
 
-  // NOTE: mirrors the useAdminLogout contract from 04-admin-access-frontend.md §4.4 —
-  // onSettled clears local state even if the API call itself fails, so the admin
-  // is never stuck unable to log out client-side. Once src/hooks/useAdminAuth.ts
-  // exists (Phase D), replace this with `const { mutate: doLogout } = useAdminLogout()`
-  // and call `doLogout()` below — same behavior, shared implementation.
   const { mutate: doLogout } = useMutation({
     mutationFn: () => api.post('/admin/auth/logout'),
     onSettled: () => logout(),
   });
 
+  const adminInitial = admin?.email ? admin.email.charAt(0).toUpperCase() : 'A';
+
   return (
-    <nav className="fixed left-0 top-0 z-10 hidden h-screen w-[220px] shrink-0 flex-col border-r border-border-base bg-[var(--color-secondary-fixed,#dce3ed)] md:flex">
-      <div className="mb-space-sm flex flex-col items-start gap-space-md border-b border-border-base p-space-gutter">
-        <span className="font-card-title text-card-title font-bold text-[var(--color-on-secondary-fixed-variant,#40474f)]">
-          Shadow Economy Map
-        </span>
-
-        <div className="mt-space-sm flex items-center gap-space-sm">
-          <div className="h-8 w-8 rounded-full bg-surface shadow-sm" />
-
-          <div>
-            <div className="font-card-title text-card-title text-on-surface">Admin Panel</div>
-
-            {admin?.email && (
-              <div className="font-body-sm text-body-sm text-[var(--color-text-muted)]">
-                {admin.email}
-              </div>
-            )}
+    <aside className="fixed left-0 top-0 z-30 hidden h-screen w-60 shrink-0 flex-col border-r border-gray-200/80 bg-white md:flex">
+      {/* Brand Header */}
+      <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+        <Link to={ROUTES.HOME} className="flex items-center gap-2.5 group">
+          <img
+            src="/ecolens-tr.png"
+            alt="EcoLens"
+            className="h-7 w-auto object-contain transition-transform group-hover:scale-105"
+          />
+          <div className="flex flex-col">
+            <span className="text-base font-extrabold text-gray-900 tracking-tight leading-none">
+              EcoLens
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 mt-0.5">
+              Admin Console
+            </span>
           </div>
+        </Link>
+      </div>
+
+      {/* Admin User Card */}
+      <div className="p-4 mx-3 my-3 rounded-2xl bg-gray-50/80 border border-gray-100 flex items-center gap-3">
+        <div className="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center shadow-xs shrink-0">
+          {adminInitial}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-bold text-gray-900 truncate">Administrator</p>
+          <p className="text-[11px] text-gray-500 truncate">
+            {admin?.email || 'admin@ecolens.org'}
+          </p>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-space-sm overflow-y-auto py-space-sm">
-        {NAV_LINKS.map((link) => {
-          const isActive = location.pathname === link.to;
+      {/* Navigation Links */}
+      <div className="flex flex-1 flex-col gap-1 px-3 py-2 overflow-y-auto">
+        <p className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+          Management
+        </p>
+        {NAV_LINKS.map(({ label, to, icon: Icon }) => {
+          const isActive = location.pathname === to;
 
           return (
             <Link
-              key={link.label}
-              to={link.to}
+              key={label}
+              to={to}
               className={cn(
-                'mx-2 my-1 flex items-center gap-3 rounded-lg px-4 py-3 font-label-caps text-label-caps transition-all duration-200',
+                'flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all duration-150 cursor-pointer',
                 isActive
-                  ? 'bg-[var(--color-primary-container)] text-[var(--color-on-primary-container,#fefcff)]'
-                  : 'text-[var(--color-on-secondary-fixed-variant,#40474f)] hover:bg-[var(--color-secondary-fixed-dim,#c0c7d1)]'
+                  ? 'bg-blue-50 text-blue-700 shadow-2xs font-bold'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               )}
             >
-              <span className="material-symbols-outlined">{link.icon}</span>
-              {link.label}
+              <Icon
+                className={cn('w-4 h-4 shrink-0', isActive ? 'text-blue-600' : 'text-gray-400')}
+              />
+              <span>{label}</span>
             </Link>
           );
         })}
       </div>
 
-      <div className="mt-auto border-t border-border-base p-space-sm">
+      {/* Footer Navigation: Back to public map & Logout */}
+      <div className="p-3 border-t border-gray-100 space-y-1">
+        <Link
+          to={ROUTES.HOME}
+          className="flex items-center gap-2.5 rounded-xl px-3.5 py-2 text-xs font-medium text-gray-500 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 text-gray-400" />
+          <span>Public Map</span>
+        </Link>
         <button
           onClick={() => doLogout()}
-          className="mx-2 my-1 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-4 py-3 text-left font-label-caps text-label-caps text-[var(--color-on-secondary-fixed-variant,#40474f)] transition-all duration-200 hover:bg-[var(--color-secondary-fixed-dim,#c0c7d1)]"
+          className="flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
         >
-          <span className="material-symbols-outlined">logout</span>
-          Logout
+          <LogOut className="w-4 h-4 text-red-500" />
+          <span>Log out</span>
         </button>
       </div>
-    </nav>
+    </aside>
   );
 }
