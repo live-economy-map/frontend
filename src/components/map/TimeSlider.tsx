@@ -19,7 +19,7 @@ export default function TimeSlider({
     new Date(period).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 
   return (
-    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 glass-panel rounded-xl shadow-card px-space-lg py-space-md w-[min(720px,90vw)]">
+    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 glass-panel rounded-xl shadow-card px-space-lg py-space-md w-[min(720px,calc(100%-2rem))] max-w-[calc(100%-2rem)]">
       <div className="flex items-center justify-between mb-space-sm">
         <span className="font-label-caps text-label-caps text-text-muted uppercase">
           {formatLabel(currentPeriod)}

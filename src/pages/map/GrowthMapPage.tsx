@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMapCells, useRawLayer, useAvailablePeriods } from '@/hooks/useMap';
-import { getDefaultPeriodRange } from '@/lib/periods';
 import GrowthMapCanvas, { type GrowthMapCanvasRef } from '@/components/map/GrowthMapCanvas';
 import ActivityBar from '@/components/map/ActivityBar';
 import MapToolbar from '@/components/map/MapToolbar';
@@ -25,11 +24,16 @@ export default function GrowthMapPage() {
   const mapRef = useRef<GrowthMapCanvasRef>(null);
 
   const { data: periodsData } = useAvailablePeriods();
-  const allPeriods = periodsData?.all ?? [];
-  const availablePeriods = allPeriods.length > 0 ? allPeriods : getDefaultPeriodRange();
+  const allPeriods = periodsData?.all;
+  const availablePeriods = useMemo(() => {
+    if (!allPeriods || !Array.isArray(allPeriods)) return [];
+    return [...allPeriods]
+      .filter(Boolean)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  }, [allPeriods]);
 
   const validPeriod = useMemo(() => {
-    if (availablePeriods.length === 0) return undefined;
+    if (availablePeriods.length === 0) return urlPeriod;
     if (urlPeriod && availablePeriods.includes(urlPeriod)) return urlPeriod;
     return availablePeriods[availablePeriods.length - 1];
   }, [urlPeriod, availablePeriods]);
@@ -192,6 +196,7 @@ export default function GrowthMapPage() {
             availablePeriods={availablePeriods}
             selectedPeriod={displayPeriod ?? validPeriod}
             onPeriodChange={handlePeriodChange}
+            isPanelOpen={!!selectedCellId}
           />
         </div>
 
