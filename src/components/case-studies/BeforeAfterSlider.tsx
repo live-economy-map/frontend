@@ -1,4 +1,6 @@
+// src/components/case-studies/BeforeAfterSlider.tsx
 import { useState, useRef, useCallback } from 'react';
+import { ArrowLeftRight } from 'lucide-react';
 
 interface BeforeAfterSliderProps {
   beforeImageUrl: string;
@@ -7,13 +9,11 @@ interface BeforeAfterSliderProps {
   afterLabel?: string;
 }
 
-// Caller's responsibility to only mount this when both URLs are non-null
-// (see CaseStudyDetailPanel) — this component does not branch on nullability.
 export default function BeforeAfterSlider({
   beforeImageUrl,
   afterImageUrl,
-  beforeLabel = 'Before',
-  afterLabel = 'After',
+  beforeLabel = 'Before Detection',
+  afterLabel = 'After Development',
 }: BeforeAfterSliderProps) {
   const [position, setPosition] = useState(50);
   const [failed, setFailed] = useState(false);
@@ -46,8 +46,10 @@ export default function BeforeAfterSlider({
 
   if (failed) {
     return (
-      <div className="flex h-[300px] items-center justify-center rounded-xl bg-surface-container-lowest p-2 soft-shadow md:h-[400px]">
-        <p className="text-body-sm text-text-muted">Before/after imagery unavailable</p>
+      <div className="flex h-[320px] items-center justify-center rounded-2xl bg-gray-50 border border-gray-100 p-4 md:h-[420px]">
+        <p className="text-xs sm:text-sm text-gray-500">
+          Before/after imagery currently unavailable
+        </p>
       </div>
     );
   }
@@ -55,7 +57,7 @@ export default function BeforeAfterSlider({
   return (
     <div
       ref={containerRef}
-      className="relative h-[300px] w-full touch-none overflow-hidden rounded-xl bg-surface-container-lowest p-2 soft-shadow md:h-[400px]"
+      className="relative h-[320px] w-full touch-none overflow-hidden rounded-2xl bg-gray-900 border border-gray-200 shadow-sm md:h-[420px] select-none"
     >
       <div className="absolute inset-0">
         <img
@@ -64,7 +66,7 @@ export default function BeforeAfterSlider({
           onError={() => setFailed(true)}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <span className="absolute left-4 top-4 rounded-sm bg-surface-container-lowest/90 px-3 py-1 text-label-caps text-on-surface shadow-sm">
+        <span className="absolute left-4 top-4 rounded-lg bg-black/60 backdrop-blur-md px-3 py-1.5 text-xs font-semibold text-white shadow-sm border border-white/10">
           {beforeLabel}
         </span>
         <div
@@ -77,7 +79,7 @@ export default function BeforeAfterSlider({
             onError={() => setFailed(true)}
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <span className="absolute right-4 top-4 rounded-sm bg-surface-container-lowest/90 px-3 py-1 text-label-caps text-on-surface shadow-sm">
+          <span className="absolute right-4 top-4 rounded-lg bg-black/60 backdrop-blur-md px-3 py-1.5 text-xs font-semibold text-white shadow-sm border border-white/10">
             {afterLabel}
           </span>
         </div>
@@ -94,11 +96,11 @@ export default function BeforeAfterSlider({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onKeyDown={onKeyDown}
-        className="absolute inset-y-0 z-10 flex w-0.5 -translate-x-1/2 transform cursor-ew-resize items-center justify-center bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+        className="absolute inset-y-0 z-10 flex w-1 -translate-x-1/2 transform cursor-ew-resize items-center justify-center bg-white shadow-[0_0_10px_rgba(0,0,0,0.6)]"
         style={{ left: `${position}%` }}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-primary shadow-lg">
-          <span className="material-symbols-outlined text-[16px] text-white">swap_horiz</span>
+        <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-blue-600 shadow-md text-white">
+          <ArrowLeftRight className="w-4 h-4" />
         </div>
       </div>
     </div>
