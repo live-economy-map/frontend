@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { label: 'Map', to: ROUTES.MAP },
   { label: 'Case Studies', to: ROUTES.CASE_STUDIES },
   { label: 'Methodology', to: ROUTES.METHODOLOGY },
+  { label: 'About', to: ROUTES.ABOUT },
 ] as const;
 
 function NavLink({ label, to, isActive }: { label: string; to: string; isActive: boolean }) {
@@ -48,14 +49,6 @@ export function TopNavBar() {
             isActive={location.pathname === link.to}
           />
         ))}
-
-        {/* "About" has no route/page in the spec — placeholder link, not wired */}
-        <a
-          href="#"
-          className="font-label-caps text-label-caps uppercase tracking-wider text-on-surface-variant transition-colors hover:text-primary"
-        >
-          About
-        </a>
       </div>
 
       <Link

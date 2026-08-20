@@ -14,6 +14,7 @@ const GrowthMapPage = lazy(() => import('@/pages/map/GrowthMapPage'));
 const CaseStudiesListPage = lazy(() => import('@/pages/CaseStudiesListPage'));
 const CaseStudyDetailPage = lazy(() => import('@/pages/CaseStudyDetailPage'));
 const MethodologyPage = lazy(() => import('@/pages/MethodologyPage'));
+const AboutPage = lazy(() => import('@/pages/AboutPage'));
 
 // Admin pages
 const AdminLoginPage = lazy(() => import('@/pages/admin/AdminLoginPage'));
@@ -44,18 +45,10 @@ const router = createBrowserRouter([
     children: [
       { path: ROUTES.HOME, element: withSuspense(<LandingPage />) },
       { path: ROUTES.MAP, element: withSuspense(<GrowthMapPage />) },
-      {
-        path: ROUTES.CASE_STUDIES,
-        element: withSuspense(<CaseStudiesListPage />),
-      },
-      {
-        path: ROUTES.CASE_STUDY_DETAIL,
-        element: withSuspense(<CaseStudyDetailPage />),
-      },
-      {
-        path: ROUTES.METHODOLOGY,
-        element: withSuspense(<MethodologyPage />),
-      },
+      { path: ROUTES.CASE_STUDIES, element: withSuspense(<CaseStudiesListPage />) },
+      { path: ROUTES.CASE_STUDY_DETAIL, element: withSuspense(<CaseStudyDetailPage />) },
+      { path: ROUTES.METHODOLOGY, element: withSuspense(<MethodologyPage />) },
+      { path: ROUTES.ABOUT, element: withSuspense(<AboutPage />) },
     ],
   },
 
@@ -103,11 +96,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Catch-all
-  {
-    path: '*',
-    element: withSuspense(<NotFoundPage />),
-  },
+  { path: '*', element: withSuspense(<NotFoundPage />) },
 ]);
 
 export default router;

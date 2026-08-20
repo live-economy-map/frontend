@@ -9,7 +9,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const adminStorage = localStorage.getItem('admin-auth-storage');
+  const adminStorage =
+    localStorage.getItem('admin-auth-storage') || localStorage.getItem('auth-storage');
   if (adminStorage) {
     try {
       const { state } = JSON.parse(adminStorage);
@@ -32,8 +33,13 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401 && error.config?.url?.includes('/admin/')) {
+    if (
+      error.response?.status === 401 &&
+      error.config?.url?.includes('/admin/') &&
+      !error.config?.url?.includes('/admin/auth/login')
+    ) {
       localStorage.removeItem('admin-auth-storage');
+      localStorage.removeItem('auth-storage');
       window.location.href = '/admin/login';
     }
     return Promise.reject(error);

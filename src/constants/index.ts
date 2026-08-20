@@ -6,6 +6,7 @@ export const ROUTES = {
   CASE_STUDIES: '/case-studies',
   CASE_STUDY_DETAIL: '/case-studies/:id',
   METHODOLOGY: '/methodology',
+  ABOUT: '/about',
   ADMIN_LOGIN: '/admin/login',
   ADMIN_DASHBOARD: '/admin',
   ADMIN_PIPELINE: '/admin/pipeline',
@@ -33,3 +34,4 @@ export const QUERY_KEYS = {
 export function caseStudyDetailPath(caseStudyId: string) {
   return ROUTES.CASE_STUDY_DETAIL.replace(':id', caseStudyId);
 }
+export * from './queryKeys';

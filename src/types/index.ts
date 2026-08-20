@@ -1,4 +1,5 @@
 // src/types/index.ts
+import type { Polygon } from 'geojson';
 
 // API response shape matching your backend's ApiResponse class
 export interface ApiResponse<T> {
@@ -24,7 +25,7 @@ export interface GrowthCell {
   cellId: string;
   cellRow: number;
   cellCol: number;
-  boundaryGeoJson: GeoJSON.Polygon;
+  boundaryGeoJson: Polygon;
   compositeScore: number;
   isComplete: boolean;
 }
@@ -77,6 +78,26 @@ export interface CaseStudyDetail extends CaseStudySummary {
 }
 
 // ---- Site Content & Onboarding ----
+export interface AboutContentDTO {
+  stats: {
+    countriesMapped: number;
+    primarySourcesCount: number;
+    dataUpdateFrequency: string;
+    dataPointsAnalyzed: string;
+    totalDataPoints?: number;
+    gridCellsCount?: number;
+    snapshotsCount?: number;
+    publishedCaseStudies?: number;
+    lastDataRefresh: string | null;
+  };
+  summary: {
+    solutionBullets: string[];
+  };
+}
+
+export type AboutPageData = AboutContentDTO;
+export type AboutData = AboutContentDTO;
+
 export interface LandingContent {
   tagline: string;
   intro: string;
@@ -135,33 +156,5 @@ export interface ScoreWeightConfig {
   weights: { sourceKey: 'VIIRS' | 'GHSL' | 'RWI'; weight: number }[];
 }
 
-// ---- Case Study Curation (admin) ----
-export interface AdminCaseStudy {
-  id: string;
-  name: string;
-  isPublished: boolean;
-  evidenceTier: string | null;
-  createdAt: string;
-}
-
-export interface CaseStudyFormInput {
-  name: string;
-  latitude: number;
-  longitude: number;
-  gridCellId?: string;
-  evidenceDescription: string;
-  evidenceUrl?: string;
-  evidenceTier?: 'OFFICIAL' | 'MARKET_REPORT' | 'INFRASTRUCTURE' | 'LOCAL_NEWS';
-  scoreRiseDate: string;
-  confirmedDate: string;
-  beforeImageUrl?: string;
-  afterImageUrl?: string;
-  isPublished?: boolean;
-}
-
-export interface DiscoveryCandidate {
-  summary: string;
-  sourceUrl: string;
-  suggestedEvidenceTier: string;
-  mentionedDate: string;
-}
+// ---- Case Study Curation (admin) & DTOs ----
+export * from './dto';
