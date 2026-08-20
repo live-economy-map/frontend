@@ -107,7 +107,7 @@ export default function CaseStudiesTable({
     });
   }, [items, searchQuery, selectedTier, filterTab]);
 
-  const totalPages = data?.totalPages || Math.ceil((data?.total || 0) / 10) || 1;
+  const totalPages = Math.ceil((data?.total || 0) / (data?.limit || 10)) || 1;
 
   const renderTierBadge = (tier: EvidenceTier | string) => {
     switch (tier) {

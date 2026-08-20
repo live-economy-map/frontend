@@ -14,24 +14,9 @@ export const ROUTES = {
   ADMIN_CASE_STUDIES: '/admin/case-studies',
 } as const;
 
-export const QUERY_KEYS = {
-  MAP_CELLS: 'map-cells',
-  AVAILABLE_PERIODS: 'available-periods',
-  CELL_DETAIL: 'cell-detail',
-  MAP_LAYER: 'map-layer',
-  CASE_STUDIES: 'case-studies',
-  CASE_STUDY_DETAIL: 'case-study-detail',
-  CONTENT_LANDING: 'content-landing',
-  CONTENT_METHODOLOGY: 'content-methodology',
-  ADMIN_ME: 'admin-me',
-  PIPELINE_SOURCES: 'pipeline-sources',
-  PIPELINE_RUNS: 'pipeline-runs',
-  WEIGHT_CONFIGS: 'weight-configs',
-  ADMIN_CASE_STUDIES: 'admin-case-studies',
-} as const;
-
 // Helper: build a concrete case-study detail path from the ROUTES pattern.
 export function caseStudyDetailPath(caseStudyId: string) {
   return ROUTES.CASE_STUDY_DETAIL.replace(':id', caseStudyId);
 }
+
 export * from './queryKeys';
