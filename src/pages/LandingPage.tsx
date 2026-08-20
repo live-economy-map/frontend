@@ -292,14 +292,6 @@ export default function LandingPage() {
             {/* ECO Pillar */}
             <div className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xs flex flex-col justify-between hover:border-blue-200 transition-all hover:shadow-md">
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-mono font-bold text-blue-600 px-2.5 py-1 rounded-lg bg-blue-50">
-                    PREFIX
-                  </span>
-                  <span className="text-xs font-semibold text-gray-400">
-                    Economics & Informal Activity
-                  </span>
-                </div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
                   <span className="text-blue-600">Eco</span> · Economic Intelligence
                 </h3>
@@ -330,14 +322,6 @@ export default function LandingPage() {
             {/* LENS Pillar */}
             <div className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xs flex flex-col justify-between hover:border-blue-200 transition-all hover:shadow-md">
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-mono font-bold text-emerald-600 px-2.5 py-1 rounded-lg bg-emerald-50">
-                    SUFFIX
-                  </span>
-                  <span className="text-xs font-semibold text-gray-400">
-                    Earth Observation & Spatial Optics
-                  </span>
-                </div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
                   <span className="text-emerald-600">Lens</span> · Spatial Observation
                 </h3>
@@ -403,14 +387,6 @@ export default function LandingPage() {
           {/* Active Layer Feature Card */}
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">
-                  {layerDetails[activeLayer].tag}
-                </span>
-                <span className="text-xs font-mono text-gray-400">
-                  {layerDetails[activeLayer].sensor}
-                </span>
-              </div>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
                 {layerDetails[activeLayer].name}
               </h3>
@@ -461,7 +437,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 4. Key Analytical Capabilities ── */}
+      {/* ── 5. Key Analytical Capabilities ── */}
       <section className="border-t border-gray-100 bg-white py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -493,7 +469,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 5. End-to-End Discovery Pipeline ── */}
+      {/* ── 6. End-to-End Discovery Pipeline ── */}
       <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50/60 to-white py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -507,17 +483,14 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {workflowSteps.map(({ step, title, icon: Icon, desc }) => (
+            {workflowSteps.map(({ title, icon: Icon, desc }) => (
               <div
-                key={step}
+                key={title}
                 className="relative bg-white p-6 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between"
               >
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-blue-600 px-2 py-0.5 rounded-md bg-blue-50">
-                      STEP {step}
-                    </span>
-                    <Icon className="w-4 h-4 text-gray-400" />
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <Icon className="w-4.5 h-4.5" />
                   </div>
                   <h3 className="text-base font-bold text-gray-900">{title}</h3>
                   <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{desc}</p>

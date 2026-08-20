@@ -148,10 +148,8 @@ export default function AboutPage() {
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-primary font-medium text-[11px]">
-                  Cadence: {aboutData.stats.dataUpdateFrequency || 'Monthly / On-Demand'}
-                </span>
+              <div className="flex items-center gap-2 text-[11px] font-medium text-primary">
+                <span>Cadence: {aboutData.stats.dataUpdateFrequency || 'Monthly / On-Demand'}</span>
               </div>
             </div>
           )}

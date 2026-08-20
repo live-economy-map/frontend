@@ -87,14 +87,6 @@ export default function MethodologyPage() {
                 className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between hover:border-blue-200 transition-all hover:shadow-md"
               >
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold">
-                      {source.badge}
-                    </span>
-                    <span className="text-xs font-mono text-gray-400 font-semibold">
-                      {source.key}
-                    </span>
-                  </div>
                   <h3 className="text-base font-bold text-gray-900">{source.name}</h3>
                   <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                     {source.description}
