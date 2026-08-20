@@ -2,6 +2,17 @@
 
 export type EvidenceTier = 'OFFICIAL' | 'MARKET_REPORT' | 'INFRASTRUCTURE' | 'LOCAL_NEWS';
 
+export interface LandingHighlightStatsDTO {
+  publishedCaseStudyCount: number;
+  lastDataRefresh: string | null;
+}
+
+export interface LandingContentDTO {
+  tagline: string;
+  intro: string;
+  highlightStats: LandingHighlightStatsDTO;
+}
+
 export interface CaseStudySummaryDTO {
   id: string;
   name: string;
