@@ -1,5 +1,2 @@
-const CaseStudyCurationPage = () => {
-  return <div>CaseStudyCurationPage</div>;
-};
-
-export default CaseStudyCurationPage;
+// src/pages/admin/CaseStudyCurationPage.tsx
+export { default } from './AdminCaseStudiesPage';
