@@ -1,3 +1,4 @@
+// src/pages/admin/WeightConfigPage.tsx
 import { useWeightConfigs } from '@/hooks/useAdminPipeline';
 import WeightConfigForm from '@/components/admin-pipeline/WeightConfigForm';
 import WeightConfigHistory from '@/components/admin-pipeline/WeightConfigHistory';
@@ -6,26 +7,45 @@ export default function WeightConfigPage() {
   const { data, isLoading, isError } = useWeightConfigs();
 
   return (
-    <div>
-      <div className="mb-space-xl">
-        <h1 className="text-page-title font-bold text-foreground">Weight Configurations</h1>
-        <p className="text-body-md text-on-surface-variant mt-space-md">
-          Manage scoring weights for data sources.
+    <div className="space-y-8 pb-12">
+      {/* ── Page Header ── */}
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+          Weight Configurations
+        </h1>
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+          Calibrate composite score weights across VIIRS, GHSL, and RWI data streams.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
-        <div>
+      {/* ── 2-Column Layout: Form & History ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="lg:col-span-6">
           <WeightConfigForm />
         </div>
 
-        <div>
-          <h2 className="text-card-title font-bold mb-space-md">Recent Configurations</h2>
+        <div className="lg:col-span-6 space-y-4">
+          <div>
+            <h2 className="text-base font-bold text-gray-900 tracking-tight">
+              Configuration History
+            </h2>
+            <p className="text-xs text-gray-500">
+              Historical calibration versions and active production model weights.
+            </p>
+          </div>
 
-          {isLoading && <div className="text-center py-space-lg">Loading configs...</div>}
-          {isError && (
-            <div className="text-center py-space-lg text-danger">Error loading configs</div>
+          {isLoading && (
+            <div className="p-12 text-center bg-white rounded-2xl border border-gray-200/80 text-gray-400 text-sm">
+              Loading configurations…
+            </div>
           )}
+
+          {isError && (
+            <div className="p-8 text-center bg-red-50 rounded-2xl border border-red-200 text-red-600 text-sm font-medium">
+              Failed to load weight configuration history.
+            </div>
+          )}
+
           {data?.configs && <WeightConfigHistory configs={data.configs} />}
         </div>
       </div>
