@@ -74,6 +74,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   { path: '*', element: withSuspense(<NotFoundPage />) },
 ]);
 

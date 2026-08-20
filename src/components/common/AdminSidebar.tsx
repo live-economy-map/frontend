@@ -10,8 +10,6 @@ const NAV_LINKS = [
   { label: 'Pipeline', to: ROUTES.ADMIN_PIPELINE, icon: 'account_tree' },
   { label: 'Weight Config', to: ROUTES.ADMIN_WEIGHT_CONFIGS, icon: 'tune' },
   { label: 'Case Studies', to: ROUTES.ADMIN_CASE_STUDIES, icon: 'library_books' },
-  // No "Settings" link — present in the Stitch design but not backed by
-  // any route/spec in 04-06; deliberately omitted, see 9-ui-foundation-spec.md §9.4
 ] as const;
 
 export function AdminSidebar() {
