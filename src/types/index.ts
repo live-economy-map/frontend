@@ -85,12 +85,20 @@ export interface AdminIdentity {
   id: string;
   email: string;
 }
-
+export interface AdminUser {
+  id: string;
+  email: string;
+  role: 'admin';
+  createdAt: string;
+}
 export interface AdminLoginResponse {
   token: string;
-  admin: AdminIdentity;
+  admin: AdminUser;
 }
-
+export interface AdminLoginCredentials {
+  email: string;
+  password: string;
+}
 // ---- Data Pipeline Management ----
 export interface DataSourceStatus {
   key: 'VIIRS' | 'GHSL' | 'RWI' | 'GDELT';

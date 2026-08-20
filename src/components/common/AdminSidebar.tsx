@@ -7,7 +7,7 @@ import { useAdminAuthStore } from '@/store/adminAuth.store';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
-  { label: 'Pipeline', to: ROUTES.ADMIN_DASHBOARD, icon: 'account_tree' },
+  { label: 'Pipeline', to: ROUTES.ADMIN_PIPELINE, icon: 'account_tree' },
   { label: 'Weight Config', to: ROUTES.ADMIN_WEIGHT_CONFIGS, icon: 'tune' },
   { label: 'Case Studies', to: ROUTES.ADMIN_CASE_STUDIES, icon: 'library_books' },
   // No "Settings" link — present in the Stitch design but not backed by

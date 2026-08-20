@@ -1,4 +1,3 @@
-// src/components/common/StatusBadge.tsx
 import { cn } from '@/lib/utils';
 
 type StatusVariant = 'success' | 'warning' | 'error' | 'neutral';
@@ -16,7 +15,8 @@ const variantStyles: Record<StatusVariant, string> = {
   neutral: 'bg-muted text-muted-foreground',
 };
 
-export function StatusBadge({ status, label, className }: StatusBadgeProps) {
+// CHANGE THIS: Add 'default' before 'function'
+export default function StatusBadge({ status, label, className }: StatusBadgeProps) {
   return (
     <span
       className={cn(
