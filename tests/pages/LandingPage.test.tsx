@@ -1,5 +1,5 @@
 // tests/pages/LandingPage.test.tsx
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi } from 'vitest';
@@ -28,7 +28,7 @@ describe('LandingPage', () => {
 
     // Headlines
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Understand the/i);
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/See What Others/i);
+    expect(screen.getByRole('heading', { level: 2, name: /See What Others/i })).toBeInTheDocument();
 
     // Call-to-action buttons
     expect(screen.getByRole('button', { name: /Explore the Map/i })).toBeInTheDocument();
@@ -43,6 +43,35 @@ describe('LandingPage', () => {
     expect(screen.getByText('PRIMARY SATELLITE SOURCES')).toBeInTheDocument();
     expect(screen.getByText('1.5 KM² GRID CELLS')).toBeInTheDocument();
     expect(screen.getByText('DATA POINTS ANALYZED')).toBeInTheDocument();
+
+    // Multi-sensor section
+    expect(screen.getByText(/Orbital Signals Powering the Index/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /GHSL Layer/i })).toBeInTheDocument();
+
+    // Workflow steps
+    expect(screen.getByText(/Orbital Ingestion/i)).toBeInTheDocument();
+    expect(screen.getByText(/Grid Normalization/i)).toBeInTheDocument();
+    expect(screen.getByText(/Anomaly Engine/i)).toBeInTheDocument();
+    expect(screen.getByText(/Ground Corroboration/i)).toBeInTheDocument();
+
+    // Final CTA
+    expect(screen.getByRole('button', { name: /Launch Interactive Map/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Scientific Framework/i })).toBeInTheDocument();
+  });
+
+  it('switches layer details when layer tabs are clicked', () => {
+    renderWithProviders(<LandingPage />);
+
+    // Default layer is VIIRS
+    expect(screen.getByText(/VIIRS Nighttime Radiance/i)).toBeInTheDocument();
+
+    // Switch to GHSL
+    fireEvent.click(screen.getByRole('button', { name: /GHSL Layer/i }));
+    expect(screen.getByText(/Global Human Settlement Layer/i)).toBeInTheDocument();
+
+    // Switch to RWI
+    fireEvent.click(screen.getByRole('button', { name: /RWI Layer/i }));
+    expect(screen.getByText(/Relative Wealth Index/i)).toBeInTheDocument();
   });
 
   it('renders dynamic content when backend API returns analytics data', () => {

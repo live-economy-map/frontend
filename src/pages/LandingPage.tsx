@@ -1,6 +1,23 @@
 // src/pages/LandingPage.tsx
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Globe, Layers, LayoutGrid, Clock } from 'lucide-react';
+import {
+  ArrowRight,
+  ChevronRight,
+  Globe,
+  Layers,
+  LayoutGrid,
+  Clock,
+  Satellite,
+  Building2,
+  TrendingUp,
+  ShieldCheck,
+  Cpu,
+  Radar,
+  FileCheck,
+  BarChart3,
+  Sparkles,
+} from 'lucide-react';
 import { useAboutContent } from '@/hooks/useContent';
 
 // ── 8x8 Matrix for Satellite Density Heatmap ────────────────────────────────
@@ -41,6 +58,7 @@ function MiniHeatmap() {
 export default function LandingPage() {
   const navigate = useNavigate();
   const { data: aboutData } = useAboutContent();
+  const [activeLayer, setActiveLayer] = useState<'VIIRS' | 'GHSL' | 'RWI'>('VIIRS');
 
   const countriesCount = aboutData?.stats?.countriesMapped ?? 1;
   const countriesDisplay = countriesCount === 1 ? '1' : `${countriesCount}+`;
@@ -76,6 +94,83 @@ export default function LandingPage() {
       value: dataPointsDisplay,
       label: 'DATA POINTS ANALYZED',
       sub: 'Continuous signals & snapshots',
+    },
+  ];
+
+  const layerDetails = {
+    VIIRS: {
+      name: 'VIIRS Nighttime Radiance',
+      sensor: 'NOAA-20 / Suomi-NPP VIIRS DNB',
+      tag: 'Nocturnal Luminosity',
+      description:
+        'Continuous ~500m night-light emissions. Sudden, persistent radiance spikes illuminate unrecorded commercial zones, power grid extensions, and high-density informal night markets.',
+      highlight: 'Resolves 24-hour economic energy outputs with sub-kilometer sensitivity.',
+    },
+    GHSL: {
+      name: 'Global Human Settlement Layer',
+      sensor: 'Copernicus Sentinel-1 / Sentinel-2 Radar & Optical',
+      tag: 'Built-up Infrastructure Footprint',
+      description:
+        'Analyzes spatial structural footprints, roof density, and industrial construction surfaces. Detects physical warehouse clusters and logistical nodes before census updates.',
+      highlight: 'Synthetic aperture radar tracks physical building volumes through cloud cover.',
+    },
+    RWI: {
+      name: 'Relative Wealth Index',
+      sensor: 'High-Res Asset & Connectivity Proxies',
+      tag: 'Micro-Prosperity Gradients',
+      description:
+        'Machine-learning micro-estimates combining spatial infrastructure connectivity, building metrics, and survey-calibrated economic gradients.',
+      highlight: 'Calibrated against national demographic and living standard surveys.',
+    },
+  };
+
+  const workflowSteps = [
+    {
+      step: '01',
+      title: 'Orbital Ingestion',
+      icon: Satellite,
+      desc: 'Automated retrieval of multispectral optical, synthetic aperture radar, and night lights rasters.',
+    },
+    {
+      step: '02',
+      title: 'Grid Normalization',
+      icon: LayoutGrid,
+      desc: 'Harmonization of spatial datasets across uniform 1.5 km² analytical grid cells across Addis Ababa.',
+    },
+    {
+      step: '03',
+      title: 'Anomaly Engine',
+      icon: Cpu,
+      desc: 'Algorithmic weighting and growth vector scoring to flag persistent economic divergence.',
+    },
+    {
+      step: '04',
+      title: 'Ground Corroboration',
+      icon: FileCheck,
+      desc: 'Corroborating orbital anomalies with municipal permits, market filings, and on-the-ground records.',
+    },
+  ];
+
+  const capabilities = [
+    {
+      icon: Radar,
+      title: 'High-Frequency Anomaly Detection',
+      desc: 'Detects real-time economic shifts months before national GDP estimates or periodic surveys are published.',
+    },
+    {
+      icon: Building2,
+      title: 'Granular 1.5 km² Resolution',
+      desc: 'Decomposes urban corridors into micro-zones, capturing informal market expansions at block-level scale.',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Multi-Tier Empirical Ground Truth',
+      desc: 'Every flagged hotspot is verified across 3 distinct validation tiers to eliminate noise and sensor artifacts.',
+    },
+    {
+      icon: BarChart3,
+      title: 'Open Data & Transparent Scoring',
+      desc: 'Publicly inspectable weights, reproducible methodologies, and open analytical access without paywalls.',
     },
   ];
 
@@ -172,6 +267,207 @@ export default function LandingPage() {
               <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── 3. Earth Observation Layers & Data Architecture ── */}
+      <section className="border-t border-gray-100 bg-gradient-to-b from-white to-blue-50/30 py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
+              <Satellite className="w-3.5 h-3.5" />
+              <span>Multi-Sensor Modalities</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+              Orbital Signals Powering the Index
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600">
+              We ingest and harmonize three distinct remote sensing streams to isolate genuine
+              economic growth signatures from seasonal variance and sensor noise.
+            </p>
+          </div>
+
+          {/* Interactive Layer Selector */}
+          <div className="flex justify-center">
+            <div className="inline-flex p-1.5 rounded-2xl bg-gray-100/80 border border-gray-200/80 gap-1.5">
+              {(['VIIRS', 'GHSL', 'RWI'] as const).map((key) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveLayer(key)}
+                  className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                    activeLayer === key
+                      ? 'bg-white text-blue-600 shadow-xs border border-gray-200/60'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  }`}
+                >
+                  {key} Layer
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Active Layer Feature Card */}
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">
+                  {layerDetails[activeLayer].tag}
+                </span>
+                <span className="text-xs font-mono text-gray-400">
+                  {layerDetails[activeLayer].sensor}
+                </span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                {layerDetails[activeLayer].name}
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                {layerDetails[activeLayer].description}
+              </p>
+              <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100 text-xs sm:text-sm text-blue-900 flex items-start gap-2.5">
+                <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <span>{layerDetails[activeLayer].highlight}</span>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 flex flex-col gap-3">
+              {[
+                {
+                  label: 'Spatial Unit',
+                  value: '1.5 km² analytical grid cells',
+                  icon: LayoutGrid,
+                },
+                {
+                  label: 'Temporal Cadence',
+                  value: 'Monthly time-series composite',
+                  icon: Clock,
+                },
+                {
+                  label: 'Confidence Metric',
+                  value: 'Calibrated against ground truth',
+                  icon: TrendingUp,
+                },
+              ].map(({ label, value, icon: Icon }) => (
+                <div
+                  key={label}
+                  className="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 flex items-center gap-3.5"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-white text-blue-600 shadow-2xs flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                      {label}
+                    </p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-800">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. Key Analytical Capabilities ── */}
+      <section className="border-t border-gray-100 bg-white py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+              Why Satellite Observational Intelligence?
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600">
+              Bridging the gap between official macroeconomic data and fast-evolving physical growth
+              on the ground.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {capabilities.map(({ icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="p-6 rounded-2xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-blue-200 hover:shadow-md transition-all flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="w-11 h-11 rounded-xl bg-blue-100/60 text-blue-600 flex items-center justify-center">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900">{title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. End-to-End Discovery Pipeline ── */}
+      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50/60 to-white py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
+              <Cpu className="w-3.5 h-3.5" />
+              <span>Algorithmic Workflow</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+              From Raw Orbit to Verified Insights
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600">
+              A transparent, four-phase pipeline turning terabytes of satellite imagery into
+              verified case studies.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {workflowSteps.map(({ step, title, icon: Icon, desc }) => (
+              <div
+                key={step}
+                className="relative bg-white p-6 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-blue-600 px-2 py-0.5 rounded-md bg-blue-50">
+                      STEP {step}
+                    </span>
+                    <Icon className="w-4 h-4 text-gray-400" />
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900">{title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Final Call to Action Banner ── */}
+      <section className="border-t border-gray-100 bg-gray-900 text-white py-14 px-6 sm:px-12 lg:px-20">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="space-y-2 text-center md:text-left max-w-xl">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              Explore Addis Ababa on the Live Heatmap
+            </h3>
+            <p className="text-sm text-gray-300">
+              Inspect 238 grid units, historical time-series curves, and verified ground-truth case
+              studies interactively.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4 flex-wrap justify-center">
+            <button
+              onClick={() => navigate('/map')}
+              className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              Launch Interactive Map
+              <ArrowRight className="h-4 w-4" />
+            </button>
+
+            <button
+              onClick={() => navigate('/methodology')}
+              className="inline-flex items-center justify-center gap-1.5 border border-gray-700 hover:border-gray-600 hover:bg-gray-800 text-gray-200 text-sm font-medium px-5 py-3 rounded-xl transition-colors cursor-pointer"
+            >
+              Scientific Framework
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </section>
     </div>
