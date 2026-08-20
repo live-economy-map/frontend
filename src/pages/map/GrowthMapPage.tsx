@@ -1,6 +1,7 @@
 // src/pages/map/GrowthMapPage.tsx
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Loader2, AlertCircle, RotateCw } from 'lucide-react';
 import { useMapCells, useRawLayer, useAvailablePeriods } from '@/hooks/useMap';
 import GrowthMapCanvas, { type GrowthMapCanvasRef } from '@/components/map/GrowthMapCanvas';
 import ActivityBar from '@/components/map/ActivityBar';
@@ -22,7 +23,7 @@ export default function GrowthMapPage() {
 
   const mapRef = useRef<GrowthMapCanvasRef>(null);
 
-  const { data: periodsData } = useAvailablePeriods();
+  const { data: periodsData, isLoading: isPeriodsLoading } = useAvailablePeriods();
   const allPeriods = periodsData?.all;
   const availablePeriods = useMemo(() => {
     if (!allPeriods || !Array.isArray(allPeriods)) return [];
@@ -60,8 +61,25 @@ export default function GrowthMapPage() {
   };
   useEffect(() => () => clearTimeout(debounceRef.current), []);
 
-  const { data: cellsData, isLoading, isError, refetch } = useMapCells(activePeriod);
-  const { data: rawLayerData } = useRawLayer(activeRawLayer, activePeriod);
+  const {
+    data: cellsData,
+    isLoading: isCellsLoading,
+    isFetching: isCellsFetching,
+    isError: isCellsError,
+    refetch: refetchCells,
+  } = useMapCells(activePeriod);
+
+  const {
+    data: rawLayerData,
+    isLoading: isLayerLoading,
+    isFetching: isLayerFetching,
+  } = useRawLayer(activeRawLayer, activePeriod);
+
+  const isMapLoading =
+    isPeriodsLoading ||
+    (isCellsLoading && !cellsData) ||
+    (Boolean(activeRawLayer) && isLayerLoading && !rawLayerData);
+  const isMapUpdating = !isMapLoading && (isCellsFetching || isLayerFetching);
 
   const valueOverride = useMemo(() => {
     if (!activeRawLayer || !rawLayerData) return undefined;
@@ -133,7 +151,7 @@ export default function GrowthMapPage() {
                           setActiveRawLayer(opt.value);
                           setIsLayerDropdownOpen(false);
                         }}
-                        className={`w-full text-left px-space-sm py-space-sm rounded-lg text-body-sm transition-colors ${
+                        className={`w-full text-left px-space-sm py-space-sm rounded-lg text-body-sm transition-colors cursor-pointer ${
                           isActive
                             ? 'bg-primary text-white'
                             : 'hover:bg-surface-container-high text-on-surface'
@@ -154,14 +172,14 @@ export default function GrowthMapPage() {
             <div className="flex items-center gap-1">
               <button
                 onClick={() => mapRef.current?.zoomIn()}
-                className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface"
+                className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface cursor-pointer"
                 aria-label="Zoom In"
               >
                 <span className="material-symbols-outlined text-sm">add</span>
               </button>
               <button
                 onClick={() => mapRef.current?.zoomOut()}
-                className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface"
+                className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface cursor-pointer"
                 aria-label="Zoom Out"
               >
                 <span className="material-symbols-outlined text-sm">remove</span>
@@ -182,17 +200,44 @@ export default function GrowthMapPage() {
             </div>
           )}
 
-          {isLoading && (
-            <div className="absolute inset-0 z-40 flex items-center justify-center bg-surface/60">
-              <span className="text-body-sm text-text-muted">Loading map…</span>
+          {/* Map Loading State - Pure Circular Spinner */}
+          {isMapLoading && (
+            <div className="absolute inset-0 z-40 flex items-center justify-center bg-white/40 dark:bg-black/40 backdrop-blur-xs pointer-events-none transition-opacity duration-200">
+              <Loader2 className="w-10 h-10 text-primary animate-spin" />
             </div>
           )}
-          {isError && (
-            <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-surface/90 gap-space-sm">
-              <span className="text-body-sm text-[#E74F3D]">Couldn't load the map data.</span>
-              <button onClick={() => refetch()} className="text-body-sm text-primary underline">
-                Retry
-              </button>
+
+          {/* Subtle Background Update Indicator */}
+          {isMapUpdating && (
+            <div className="absolute top-4 right-4 z-30 flex items-center p-2 rounded-full bg-surface/80 backdrop-blur-md shadow-sm border border-border-base">
+              <Loader2 className="w-4 h-4 text-primary animate-spin" />
+            </div>
+          )}
+
+          {/* Error State */}
+          {isCellsError && !isMapLoading && (
+            <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-white/90 dark:bg-gray-950/90 backdrop-blur-xs p-6">
+              <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white dark:bg-gray-900 shadow-2xl border border-red-100 dark:border-red-950/50 text-center max-w-sm">
+                <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/40 flex items-center justify-center text-red-600">
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    Couldn't load map data
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Failed to fetch grid cells from the server. Please check your connection and
+                    retry.
+                  </p>
+                </div>
+                <button
+                  onClick={() => refetchCells()}
+                  className="mt-2 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-xs hover:shadow-md cursor-pointer"
+                >
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>Retry</span>
+                </button>
+              </div>
             </div>
           )}
 

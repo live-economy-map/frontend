@@ -2,10 +2,12 @@ import axios from 'axios';
 import { env } from '@/config/env';
 import type { ApiResponse } from '@/types';
 
+const normalizedBaseUrl = (env.VITE_API_URL || '').replace(/\/+$/, '');
+
 const api = axios.create({
-  baseURL: env.VITE_API_URL,
+  baseURL: normalizedBaseUrl || '/api/v1',
   headers: { 'Content-Type': 'application/json' },
-  timeout: 10000,
+  timeout: 60000,
 });
 
 api.interceptors.request.use((config) => {
