@@ -28,11 +28,13 @@ export default function PublicLayout() {
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur border-b border-gray-200 shrink-0">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
-          <NavLink to="/" className="flex items-center gap-2.5 font-bold text-gray-900">
-            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm">
-              <Shield className="h-4 w-4" />
-            </div>
-            <span className="text-base font-bold tracking-tight">Shadow Economy Map</span>
+          <NavLink to="/" className="flex items-center gap-2.5 font-bold text-gray-900 group">
+            <img
+              src="/ecolens-tr.png"
+              alt="EcoLens Logo"
+              className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+            />
+            <span className="text-lg font-bold tracking-tight text-gray-900">EcoLens</span>
           </NavLink>
 
           {/* Desktop Navigation Links */}
@@ -107,9 +109,12 @@ export default function PublicLayout() {
       {!isMapPage && (
         <footer className="border-t border-gray-100 bg-white py-6 shrink-0">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-gray-400">
-              © {new Date().getFullYear()} Shadow Economy Map. All rights reserved.
-            </p>
+            <div className="flex items-center gap-2.5">
+              <img src="/ecolens-tr.png" alt="EcoLens" className="h-6 w-auto object-contain" />
+              <p className="text-xs text-gray-500 font-medium">
+                © {new Date().getFullYear()} EcoLens. All rights reserved.
+              </p>
+            </div>
             <div className="flex items-center gap-6">
               <Link
                 to="/methodology"

@@ -30,9 +30,12 @@ export function AdminSidebar() {
   return (
     <nav className="fixed left-0 top-0 z-10 hidden h-screen w-[220px] shrink-0 flex-col border-r border-border-base bg-[var(--color-secondary-fixed,#dce3ed)] md:flex">
       <div className="mb-space-sm flex flex-col items-start gap-space-md border-b border-border-base p-space-gutter">
-        <span className="font-card-title text-card-title font-bold text-[var(--color-on-secondary-fixed-variant,#40474f)]">
-          Shadow Economy Map
-        </span>
+        <Link to={ROUTES.HOME} className="flex items-center gap-2">
+          <img src="/ecolens-tr.png" alt="EcoLens" className="h-7 w-auto object-contain" />
+          <span className="font-card-title text-card-title font-bold text-[var(--color-on-secondary-fixed-variant,#40474f)]">
+            EcoLens
+          </span>
+        </Link>
 
         <div className="mt-space-sm flex items-center gap-space-sm">
           <div className="h-8 w-8 rounded-full bg-surface shadow-sm" />
