@@ -200,31 +200,17 @@ export default function GrowthMapPage() {
             </div>
           )}
 
-          {/* Map Loading State */}
+          {/* Map Loading State - Pure Circular Spinner */}
           {isMapLoading && (
-            <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-white/75 dark:bg-gray-950/75 backdrop-blur-xs transition-all duration-300">
-              <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white/95 dark:bg-gray-900/95 shadow-2xl border border-gray-100 dark:border-gray-800 text-center max-w-xs">
-                <div className="relative flex items-center justify-center">
-                  <div className="absolute w-12 h-12 rounded-full border-2 border-blue-500/30 animate-ping" />
-                  <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                    Loading Economic Map
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Fetching satellite indicators & grid data…
-                  </p>
-                </div>
-              </div>
+            <div className="absolute inset-0 z-40 flex items-center justify-center bg-white/40 dark:bg-black/40 backdrop-blur-xs pointer-events-none transition-opacity duration-200">
+              <Loader2 className="w-10 h-10 text-primary animate-spin" />
             </div>
           )}
 
           {/* Subtle Background Update Indicator */}
           {isMapUpdating && (
-            <div className="absolute top-4 right-4 z-30 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border border-gray-200/80 dark:border-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300">
-              <Loader2 className="w-3.5 h-3.5 text-blue-600 animate-spin" />
-              <span>Updating map layer…</span>
+            <div className="absolute top-4 right-4 z-30 flex items-center p-2 rounded-full bg-surface/80 backdrop-blur-md shadow-sm border border-border-base">
+              <Loader2 className="w-4 h-4 text-primary animate-spin" />
             </div>
           )}
 
