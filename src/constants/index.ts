@@ -4,7 +4,7 @@ export const ROUTES = {
   HOME: '/',
   MAP: '/map',
   CASE_STUDIES: '/case-studies',
-  CASE_STUDY_DETAIL: '/case-studies/:caseStudyId',
+  CASE_STUDY_DETAIL: '/case-studies/:id',
   METHODOLOGY: '/methodology',
   ADMIN_LOGIN: '/admin/login',
   ADMIN_DASHBOARD: '/admin',
