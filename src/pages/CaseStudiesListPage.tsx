@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useCaseStudies } from '@/hooks/useCaseStudies';
+import { useCaseStudies } from '@/hooks/usePublicCaseStudies';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/ui/button';
 import { caseStudyDetailPath } from '@/constants';
