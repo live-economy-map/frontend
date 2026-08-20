@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
+  { to: '/map', label: 'Map' },
   { to: '/case-studies', label: 'Case Studies' },
   { to: '/methodology', label: 'Methodology' },
   { to: '/about', label: 'About' },
