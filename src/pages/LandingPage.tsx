@@ -17,6 +17,7 @@ import {
   FileCheck,
   BarChart3,
   Sparkles,
+  CheckCircle2,
 } from 'lucide-react';
 import { useAboutContent } from '@/hooks/useContent';
 
@@ -270,7 +271,100 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 3. Earth Observation Layers & Data Architecture ── */}
+      {/* ── 3. What EcoLens Means ── */}
+      <section className="border-t border-gray-100 bg-gradient-to-br from-blue-50/40 via-white to-gray-50/60 py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+              What Does <span className="text-blue-600">EcoLens</span> Mean?
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+              EcoLens bridges macroeconomic data gaps by fusing real-world economic dynamics with
+              high-resolution orbital earth-observation optics.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {/* ECO Pillar */}
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xs flex flex-col justify-between hover:border-blue-200 transition-all hover:shadow-md">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono font-bold text-blue-600 px-2.5 py-1 rounded-lg bg-blue-50">
+                    PREFIX
+                  </span>
+                  <span className="text-xs font-semibold text-gray-400">
+                    Economics & Informal Activity
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+                  <span className="text-blue-600">Eco</span> · Economic Intelligence
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                  Stands for <strong>real-world economic dynamics</strong>—uncovering unrecorded
+                  commerce, informal industrial emergence, logistical nodes, and ground-level
+                  prosperity gradients that conventional registries often miss.
+                </p>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
+                {[
+                  'Captures unrecorded commerce and informal market vibrancy',
+                  'Tracks rapid infrastructure build-out across expanding corridors',
+                  'Overcomes multi-year census delays with continuous data feeds',
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-700"
+                  >
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* LENS Pillar */}
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xs flex flex-col justify-between hover:border-blue-200 transition-all hover:shadow-md">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono font-bold text-emerald-600 px-2.5 py-1 rounded-lg bg-emerald-50">
+                    SUFFIX
+                  </span>
+                  <span className="text-xs font-semibold text-gray-400">
+                    Earth Observation & Spatial Optics
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+                  <span className="text-emerald-600">Lens</span> · Spatial Observation
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                  Stands for the <strong>high-resolution orbital perspective</strong>—fusing
+                  nocturnal luminosity emissions, SAR radar building footprints, and micro-wealth
+                  proxies into an objective, unfiltered optical lens.
+                </p>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
+                {[
+                  'Nighttime lights radiance (VIIRS) resolving 24-hour activity',
+                  'Physical building footprints and structural emergence (GHSL)',
+                  'Machine-learning micro-wealth spatial proxies (RWI)',
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-700"
+                  >
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. Earth Observation Layers & Data Architecture ── */}
       <section className="border-t border-gray-100 bg-gradient-to-b from-white to-blue-50/30 py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">

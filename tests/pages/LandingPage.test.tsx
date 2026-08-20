@@ -44,6 +44,13 @@ describe('LandingPage', () => {
     expect(screen.getByText('1.5 KM² GRID CELLS')).toBeInTheDocument();
     expect(screen.getByText('DATA POINTS ANALYZED')).toBeInTheDocument();
 
+    // What Does EcoLens Mean section
+    expect(
+      screen.getByRole('heading', { level: 2, name: /What Does EcoLens Mean/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Economic Intelligence/i)).toBeInTheDocument();
+    expect(screen.getByText(/Spatial Observation/i)).toBeInTheDocument();
+
     // Multi-sensor section
     expect(screen.getByText(/Orbital Signals Powering the Index/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /GHSL Layer/i })).toBeInTheDocument();
