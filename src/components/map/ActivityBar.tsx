@@ -210,14 +210,17 @@ export default function ActivityBar({
                 ) : (
                   <>
                     <div
-                      className={`absolute left-1/2 -translate-x-1/2 top-[13px] w-[5px] h-[5px] rounded-full ${
+                      className={`absolute left-1/2 -translate-x-1/2 top-[13px] w-[5px] h-[5px] rounded-full transition-colors ${
                         isPast ? 'bg-primary' : 'bg-border-base'
                       }`}
                     />
 
-                    <span className="absolute left-1/2 -translate-x-1/2 top-[38px] text-[10px] text-text-muted whitespace-nowrap">
-                      {shortLabel(period)}
-                    </span>
+                    {/* Only display unselected text labels if there are few periods (<= 5) on wide viewports to prevent cramped clutter */}
+                    {availablePeriods.length <= 5 && (
+                      <span className="hidden md:inline-block absolute left-1/2 -translate-x-1/2 top-[38px] text-[10px] text-text-muted whitespace-nowrap">
+                        {shortLabel(period)}
+                      </span>
+                    )}
                   </>
                 )}
               </div>
