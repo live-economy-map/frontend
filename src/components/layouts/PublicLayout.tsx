@@ -5,7 +5,7 @@ import { Menu, X, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
-  { to: '/map', label: 'Map' },
+  { to: '/', label: 'Home' },
   { to: '/case-studies', label: 'Case Studies' },
   { to: '/methodology', label: 'Methodology' },
   { to: '/about', label: 'About' },
@@ -41,6 +41,7 @@ export default function PublicLayout() {
               <NavLink
                 key={to}
                 to={to}
+                end={to === '/'}
                 className={({ isActive }) =>
                   cn(
                     'text-sm font-medium transition-colors hover:text-blue-600',
@@ -79,6 +80,7 @@ export default function PublicLayout() {
               <NavLink
                 key={to}
                 to={to}
+                end={to === '/'}
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
                   cn(
