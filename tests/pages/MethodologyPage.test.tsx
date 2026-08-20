@@ -21,9 +21,9 @@ describe('MethodologyPage', () => {
     expect(screen.getByText(/Relative Wealth Index/i)).toBeInTheDocument();
 
     // Ground truth tiers
-    expect(screen.getByText(/Tier 1: Ground-Truth Official Registries/i)).toBeInTheDocument();
-    expect(screen.getByText(/Tier 2: Enterprise & Market Reports/i)).toBeInTheDocument();
-    expect(screen.getByText(/Tier 3: Localized Media & News Verification/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tier 1: Official Ground-Truth/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tier 2: Physical Infrastructure Audits/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tier 3: Localized Ground Verification/i)).toBeInTheDocument();
 
     // CTA buttons
     expect(screen.getByRole('button', { name: /Launch Map/i })).toBeInTheDocument();

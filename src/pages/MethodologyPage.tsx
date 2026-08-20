@@ -1,6 +1,6 @@
 // src/pages/MethodologyPage.tsx
 import { useNavigate } from 'react-router-dom';
-import { Activity, ShieldCheck, ArrowRight, Database, Search, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Database, Search, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function MethodologyPage() {
@@ -28,48 +28,48 @@ export default function MethodologyPage() {
       name: 'Relative Wealth Index',
       badge: 'Economic Proxy',
       description:
-        'Combines anonymized micro-connectivity, building density metrics, and spatial asset estimations to benchmark ground-level prosperity gradients.',
-      metrics: 'High-precision spatial wealth indices calibrated against DHS surveys',
+        'Micro-estimate wealth and living standards derived from high-resolution satellite imagery, connectivity features, and calibrated mobile data.',
+      metrics: 'Meta Data for Good & UC Berkeley spatial micro-estimates',
     },
   ];
 
   const validationTiers = [
     {
-      tier: 'Tier 1: Ground-Truth Official Registries',
-      desc: 'Corroborated by municipal construction permits, commercial cadastral expansions, or official infrastructure notices.',
+      tier: 'Tier 1: Official Ground-Truth',
+      title: 'Municipal & Tax Registry Reconciliation',
+      desc: 'Corroborated against regional building permits, commercial business licenses, and government development zones.',
     },
     {
-      tier: 'Tier 2: Enterprise & Market Reports',
-      desc: 'Validated through published industrial corridor filings, regional trade surveys, and logistics hubs development data.',
+      tier: 'Tier 2: Physical Infrastructure Audits',
+      title: 'High-Res Optical & Drone Validation',
+      desc: 'Sub-meter imagery verification (Sentinel/Planet) proving active foundations, industrial sheds, and logistical activity.',
     },
     {
-      tier: 'Tier 3: Localized Media & News Verification',
-      desc: 'Cross-referenced with verified local reports, photographic field records, and public project inaugurations.',
+      tier: 'Tier 3: Localized Ground Verification',
+      title: 'Trade & Field Ground Corroboration',
+      desc: 'Market reports, local trade intelligence, and field verifications confirming informal manufacturing clusters.',
     },
   ];
 
   return (
     <div className="w-full bg-white selection:bg-blue-100 selection:text-blue-900">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 space-y-16">
-        {/* ── 1. Header & Overview ── */}
-        <section className="max-w-3xl space-y-4">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 space-y-12">
+        {/* ── 1. Page Header ── */}
+        <section className="max-w-3xl space-y-3">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-            Methodology & <span className="text-blue-600">Earth Observation</span>
+            Scientific Framework & <span className="text-blue-600">Methodology</span>
           </h1>
 
           <p className="text-base sm:text-lg text-gray-600 leading-relaxed pt-1">
-            Our framework transforms raw orbital sensor data into an interpretable composite index
-            of unrecorded economic activity, backed by multi-tier ground validation.
+            How we fuse nighttime satellite radiance, high-resolution human settlement footprints,
+            and micro-wealth proxies into a continuous index of economic expansion across Addis
+            Ababa.
           </p>
         </section>
 
         {/* ── 2. The Multi-Sensor Composite Score ── */}
         <section className="rounded-3xl border border-gray-100 bg-gradient-to-br from-blue-50/50 via-white to-gray-50 p-6 sm:p-10 shadow-xs">
           <div className="max-w-2xl space-y-3 mb-8">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600">
-              <Activity className="w-4 h-4" />
-              Composite Score Engine
-            </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
               How the Index is Computed
             </h2>
@@ -112,10 +112,6 @@ export default function MethodologyPage() {
         {/* ── 3. Ground Truth & Case Study Verification ── */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-6 space-y-4">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600">
-              <ShieldCheck className="w-4 h-4" />
-              Empirical Validation
-            </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
               Triangulating Satellite Signals with Ground Truth
             </h2>

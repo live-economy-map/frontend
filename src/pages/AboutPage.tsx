@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   MapPin,
   ArrowRight,
-  Sparkles,
   Database,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -75,11 +74,6 @@ export default function AboutPage() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16 space-y-12 sm:space-y-16">
         {/* ── 1. Hero Title & Introduction ── */}
         <section className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Economic Intelligence & Earth Observation</span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
             Shining Light on the{' '}
             <span className="text-primary">
@@ -167,9 +161,6 @@ export default function AboutPage() {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
           {/* Left Column: Problem / Gap */}
           <div className="lg:col-span-6 flex flex-col justify-center space-y-4">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-              <span>The Data Blindspot</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               The Gap in Economic Data
             </h2>
