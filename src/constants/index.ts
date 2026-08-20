@@ -15,6 +15,7 @@ export const ROUTES = {
 
 export const QUERY_KEYS = {
   MAP_CELLS: 'map-cells',
+  AVAILABLE_PERIODS: 'available-periods',
   CELL_DETAIL: 'cell-detail',
   MAP_LAYER: 'map-layer',
   CASE_STUDIES: 'case-studies',
