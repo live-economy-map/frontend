@@ -2,10 +2,13 @@ import axios from 'axios';
 import { env } from '@/config/env';
 import type { ApiResponse } from '@/types';
 
-const normalizedBaseUrl = (env.VITE_API_URL || '').replace(/\/+$/, '');
+let rawBaseUrl = (env.VITE_API_URL || '').replace(/\/+$/, '');
+if (rawBaseUrl && !rawBaseUrl.endsWith('/api/v1')) {
+  rawBaseUrl = `${rawBaseUrl}/api/v1`;
+}
 
 const api = axios.create({
-  baseURL: normalizedBaseUrl || '/api/v1',
+  baseURL: rawBaseUrl || '/api/v1',
   headers: { 'Content-Type': 'application/json' },
   timeout: 60000,
 });
