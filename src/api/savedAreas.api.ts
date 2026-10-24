@@ -4,8 +4,18 @@ import type { SavedArea, CreateSavedAreaDTO, UpdateSavedAreaDTO } from '@/types'
 
 export const savedAreasApi = {
   async getSavedAreas(): Promise<SavedArea[]> {
-    const response = await api.get<SavedArea[]>('/me/saved-areas');
-    return response.data;
+    const response = await api.get<SavedArea[] | { items: SavedArea[] }>('/me/saved-areas');
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (
+      data &&
+      typeof data === 'object' &&
+      'items' in data &&
+      Array.isArray((data as { items: SavedArea[] }).items)
+    ) {
+      return (data as { items: SavedArea[] }).items;
+    }
+    return [];
   },
 
   async createSavedArea(data: CreateSavedAreaDTO): Promise<SavedArea> {

@@ -4,8 +4,18 @@ import type { ApiKey, CreateApiKeyDTO, ApiUsage } from '@/types';
 
 export const apiKeysApi = {
   async getMyKeys(): Promise<ApiKey[]> {
-    const response = await api.get<ApiKey[]>('/me/api-keys');
-    return response.data;
+    const response = await api.get<ApiKey[] | { items: ApiKey[] }>('/me/api-keys');
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (
+      data &&
+      typeof data === 'object' &&
+      'items' in data &&
+      Array.isArray((data as { items: ApiKey[] }).items)
+    ) {
+      return (data as { items: ApiKey[] }).items;
+    }
+    return [];
   },
 
   async createKey(data: CreateApiKeyDTO): Promise<ApiKey> {

@@ -4,8 +4,18 @@ import type { Watchlist, CreateWatchlistDTO, AddWatchlistItemDTO, WatchlistItem 
 
 export const watchlistsApi = {
   async getWatchlists(): Promise<Watchlist[]> {
-    const response = await api.get<Watchlist[]>('/watchlists');
-    return response.data;
+    const response = await api.get<Watchlist[] | { items: Watchlist[] }>('/watchlists');
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (
+      data &&
+      typeof data === 'object' &&
+      'items' in data &&
+      Array.isArray((data as { items: Watchlist[] }).items)
+    ) {
+      return (data as { items: Watchlist[] }).items;
+    }
+    return [];
   },
 
   async getWatchlistById(id: string): Promise<Watchlist> {

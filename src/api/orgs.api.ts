@@ -9,8 +9,18 @@ export const orgsApi = {
   },
 
   async getMyOrgs(): Promise<Organization[]> {
-    const response = await api.get<Organization[]>('/orgs/my');
-    return response.data;
+    const response = await api.get<Organization[] | { items: Organization[] }>('/orgs/my');
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (
+      data &&
+      typeof data === 'object' &&
+      'items' in data &&
+      Array.isArray((data as { items: Organization[] }).items)
+    ) {
+      return (data as { items: Organization[] }).items;
+    }
+    return [];
   },
 
   async getOrgById(id: string): Promise<Organization> {

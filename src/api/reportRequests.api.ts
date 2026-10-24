@@ -9,8 +9,20 @@ export const reportRequestsApi = {
   },
 
   async getMyRequests(): Promise<ReportRequest[]> {
-    const response = await api.get<ReportRequest[]>('/me/report-requests');
-    return response.data;
+    const response = await api.get<ReportRequest[] | { items: ReportRequest[] }>(
+      '/me/report-requests'
+    );
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (
+      data &&
+      typeof data === 'object' &&
+      'items' in data &&
+      Array.isArray((data as { items: ReportRequest[] }).items)
+    ) {
+      return (data as { items: ReportRequest[] }).items;
+    }
+    return [];
   },
 
   async getRequestById(id: string): Promise<ReportRequest> {

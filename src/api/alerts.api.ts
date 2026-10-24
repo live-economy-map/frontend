@@ -4,8 +4,18 @@ import type { SpatialAlert, CreateAlertDTO, UpdateAlertDTO, AppNotification } fr
 
 export const alertsApi = {
   async getMyAlerts(): Promise<SpatialAlert[]> {
-    const response = await api.get<SpatialAlert[]>('/me/alerts');
-    return response.data;
+    const response = await api.get<SpatialAlert[] | { items: SpatialAlert[] }>('/me/alerts');
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (
+      data &&
+      typeof data === 'object' &&
+      'items' in data &&
+      Array.isArray((data as { items: SpatialAlert[] }).items)
+    ) {
+      return (data as { items: SpatialAlert[] }).items;
+    }
+    return [];
   },
 
   async createAlert(data: CreateAlertDTO): Promise<SpatialAlert> {
@@ -24,8 +34,20 @@ export const alertsApi = {
   },
 
   async getMyNotifications(): Promise<AppNotification[]> {
-    const response = await api.get<AppNotification[]>('/me/notifications');
-    return response.data;
+    const response = await api.get<AppNotification[] | { items: AppNotification[] }>(
+      '/me/notifications'
+    );
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (
+      data &&
+      typeof data === 'object' &&
+      'items' in data &&
+      Array.isArray((data as { items: AppNotification[] }).items)
+    ) {
+      return (data as { items: AppNotification[] }).items;
+    }
+    return [];
   },
 
   async markNotificationRead(id: string): Promise<{ success: boolean }> {

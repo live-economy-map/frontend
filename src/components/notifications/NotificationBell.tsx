@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Bell, Check, CheckCheck, AlertTriangle, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import type { AppNotification } from '@/types';
 
 export default function NotificationBell() {
   const { isAuthenticated } = useAuth();
@@ -13,12 +14,16 @@ export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: notifications = [] } = useQuery({
+  const { data: rawNotifications } = useQuery({
     queryKey: ['my-notifications'],
     queryFn: () => alertsApi.getMyNotifications(),
     enabled: isAuthenticated,
     refetchInterval: 30000, // Poll every 30s
   });
+
+  const notifications: AppNotification[] = Array.isArray(rawNotifications)
+    ? rawNotifications
+    : (rawNotifications as unknown as { items?: AppNotification[] })?.items || [];
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
