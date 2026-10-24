@@ -11,6 +11,8 @@ export interface User {
   role: UserRole;
   fullName: string;
   organizationName?: string | null;
+  phoneNumber?: string | null;
+  telegramHandle?: string | null;
   isEmailVerified: boolean;
   createdAt?: string;
 }
@@ -44,6 +46,8 @@ export interface ResetPasswordDTO {
 export interface UpdateProfileDTO {
   fullName?: string;
   organizationName?: string;
+  phoneNumber?: string;
+  telegramHandle?: string;
 }
 
 // ==========================================
@@ -125,6 +129,8 @@ export interface ReportRequest {
   areaCellIds: string[];
   orgType?: string | null;
   contactPreference?: ContactPreference;
+  phoneNumber?: string | null;
+  telegramHandle?: string | null;
   status: ReportRequestStatus;
   priority?: RequestPriority;
   assignedAdminId?: string | null;
@@ -138,6 +144,8 @@ export interface ReportRequest {
     email: string;
     fullName: string;
     organizationName?: string | null;
+    phoneNumber?: string | null;
+    telegramHandle?: string | null;
   };
   draft?: ReportDraft | null;
 }
@@ -148,6 +156,8 @@ export interface CreateReportRequestDTO {
   areaCellIds: string[];
   orgType?: string;
   contactPreference?: ContactPreference;
+  phoneNumber?: string;
+  telegramHandle?: string;
 }
 
 export interface UpdateReportRequestAdminDTO {

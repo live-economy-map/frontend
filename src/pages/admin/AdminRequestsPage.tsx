@@ -5,7 +5,24 @@ import { adminReportRequestsApi } from '@/api/admin/reportRequests.api';
 import DemandMetricsCard from '@/components/admin/DemandMetricsCard';
 import { useToast } from '@/context/ToastContext';
 import { formatApiError } from '@/lib/axios';
-import { FileText, Search, Filter, Upload, Sparkles, ChevronRight, X, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  FileText,
+  Search,
+  Filter,
+  Upload,
+  Sparkles,
+  ChevronRight,
+  X,
+  Loader2,
+  Mail,
+  Phone,
+  Send,
+  ExternalLink,
+  Copy,
+  Check,
+  MapPin,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ReportRequest, ReportRequestStatus, RequestPriority } from '@/types';
 import AIDraftEditor from '@/components/admin/AIDraftEditor';
@@ -36,6 +53,14 @@ export default function AdminRequestsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [page] = useState(1);
   const [selectedRequest, setSelectedRequest] = useState<ReportRequest | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    toast.success(`Copied ${field} to clipboard`);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   // Deliverable upload state
   const [deliverableUrl, setDeliverableUrl] = useState('');
@@ -244,9 +269,33 @@ export default function AdminRequestsPage() {
                       <div className="text-[11px] text-gray-500 font-mono">
                         {req.user?.email || 'N/A'}
                       </div>
-                      {req.orgType && (
-                        <span className="text-[10px] text-gray-400">{req.orgType}</span>
-                      )}
+                      <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                        {req.orgType && (
+                          <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                            {req.orgType}
+                          </span>
+                        )}
+                        {req.contactPreference === 'TELEGRAM' && (
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 text-[10px] font-semibold font-mono">
+                            <Send className="w-2.5 h-2.5" />
+                            {req.telegramHandle || req.user?.telegramHandle
+                              ? `@${(req.telegramHandle || req.user?.telegramHandle)!.replace(/^@/, '')}`
+                              : 'Telegram'}
+                          </span>
+                        )}
+                        {req.contactPreference === 'PHONE' && (
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[10px] font-semibold font-mono">
+                            <Phone className="w-2.5 h-2.5" />
+                            {req.phoneNumber || req.user?.phoneNumber || 'Phone'}
+                          </span>
+                        )}
+                        {(!req.contactPreference || req.contactPreference === 'EMAIL') && (
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-semibold">
+                            <Mail className="w-2.5 h-2.5" />
+                            Email
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     <td className="px-5 py-4 max-w-xs">
@@ -257,17 +306,24 @@ export default function AdminRequestsPage() {
                     </td>
 
                     <td className="px-5 py-4">
-                      <div className="flex items-center gap-1 flex-wrap">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         {req.areaCellIds.slice(0, 2).map((cellId) => (
-                          <span
+                          <Link
                             key={cellId}
-                            className="px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono text-[10px]"
+                            to={`/map?cellId=${cellId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-mono text-[10px] font-semibold transition-colors"
+                            title={`Inspect cell ${cellId} on map`}
                           >
-                            {cellId.slice(0, 8)}
-                          </span>
+                            <MapPin className="w-2.5 h-2.5 text-blue-500 shrink-0" />
+                            <span>{cellId.slice(0, 8)}</span>
+                            <ExternalLink className="w-2 h-2 opacity-60 shrink-0" />
+                          </Link>
                         ))}
                         {req.areaCellIds.length > 2 && (
-                          <span className="text-[10px] text-gray-400">
+                          <span className="text-[10px] text-gray-400 font-mono">
                             +{req.areaCellIds.length - 2} more
                           </span>
                         )}
@@ -374,58 +430,242 @@ export default function AdminRequestsPage() {
                 </div>
               </div>
 
-              {/* Requester Profile */}
-              <div className="space-y-2">
-                <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                  Requester Information
-                </h4>
-                <div className="p-4 rounded-2xl border border-gray-100 space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Full Name</span>
-                    <span className="font-semibold text-gray-900">
-                      {selectedRequest.user?.fullName || 'N/A'}
+              {/* Requester Profile & Direct Outreach */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    Requester & Client Outreach
+                  </h4>
+                  {selectedRequest.contactPreference === 'TELEGRAM' && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-[10px] font-bold">
+                      <Send className="w-3 h-3 text-sky-600" />
+                      Preferred: Telegram
                     </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Email</span>
-                    <span className="font-mono text-gray-900">
-                      {selectedRequest.user?.email || 'N/A'}
+                  )}
+                  {selectedRequest.contactPreference === 'PHONE' && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                      <Phone className="w-3 h-3 text-emerald-600" />
+                      Preferred: Phone
                     </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Contact Preference</span>
-                    <span className="font-semibold text-blue-600">
-                      {selectedRequest.contactPreference || 'EMAIL'}
+                  )}
+                  {(!selectedRequest.contactPreference ||
+                    selectedRequest.contactPreference === 'EMAIL') && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">
+                      <Mail className="w-3 h-3 text-blue-600" />
+                      Preferred: Email
                     </span>
+                  )}
+                </div>
+
+                <div className="p-4 rounded-2xl border border-gray-100 space-y-3.5 text-xs bg-gray-50/40">
+                  {/* Basic Info */}
+                  <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
+                    <div>
+                      <div className="font-bold text-gray-900 text-sm">
+                        {selectedRequest.user?.fullName || 'Anonymous Requester'}
+                      </div>
+                      <div className="text-[11px] text-gray-500">
+                        {selectedRequest.orgType ||
+                          selectedRequest.user?.organizationName ||
+                          'Individual / Researcher'}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Organization Type</span>
-                    <span className="text-gray-900">{selectedRequest.orgType || 'N/A'}</span>
+
+                  {/* Channel 1: Email */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <Mail className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] uppercase font-semibold text-gray-400">
+                          Email
+                        </div>
+                        <div className="font-mono text-gray-900 truncate">
+                          {selectedRequest.user?.email || 'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                    {selectedRequest.user?.email && (
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(selectedRequest.user!.email, 'Email')}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-pointer"
+                          title="Copy email"
+                        >
+                          {copiedField === 'Email' ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                        <a
+                          href={`mailto:${selectedRequest.user.email}?subject=${encodeURIComponent(`EcoLens Spatial Analysis: ${selectedRequest.title}`)}`}
+                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
+                        >
+                          <span>Email</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Channel 2: Phone */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <Phone className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] uppercase font-semibold text-gray-400">
+                          Phone
+                        </div>
+                        <div className="font-mono text-gray-900 truncate">
+                          {selectedRequest.phoneNumber || selectedRequest.user?.phoneNumber || (
+                            <span className="text-gray-400 italic font-sans">Not provided</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    {(selectedRequest.phoneNumber || selectedRequest.user?.phoneNumber) && (
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            copyToClipboard(
+                              selectedRequest.phoneNumber || selectedRequest.user!.phoneNumber!,
+                              'Phone'
+                            )
+                          }
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-pointer"
+                          title="Copy phone"
+                        >
+                          {copiedField === 'Phone' ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                        <a
+                          href={`tel:${selectedRequest.phoneNumber || selectedRequest.user!.phoneNumber}`}
+                          className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
+                        >
+                          <span>Call / SMS</span>
+                          <Phone className="w-2.5 h-2.5" />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Channel 3: Telegram */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
+                        <Send className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] uppercase font-semibold text-gray-400">
+                          Telegram
+                        </div>
+                        <div className="font-mono text-gray-900 truncate">
+                          {selectedRequest.telegramHandle ||
+                          selectedRequest.user?.telegramHandle ? (
+                            `@${(selectedRequest.telegramHandle || selectedRequest.user?.telegramHandle)!.replace(/^@/, '')}`
+                          ) : (
+                            <span className="text-gray-400 italic font-sans">Not provided</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    {(selectedRequest.telegramHandle || selectedRequest.user?.telegramHandle) && (
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            copyToClipboard(
+                              `@${(selectedRequest.telegramHandle || selectedRequest.user!.telegramHandle)!.replace(/^@/, '')}`,
+                              'Telegram'
+                            )
+                          }
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-pointer"
+                          title="Copy Telegram username"
+                        >
+                          {copiedField === 'Telegram' ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                        <a
+                          href={`https://t.me/${(selectedRequest.telegramHandle || selectedRequest.user!.telegramHandle)!.replace(/^@/, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-2.5 py-1 bg-sky-600 hover:bg-sky-700 text-white text-[11px] font-semibold rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
+                        >
+                          <span>Open Chat</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Research Prompt & Cells */}
               <div className="space-y-2">
-                <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                  Analysis Objectives
-                </h4>
-                <div className="p-4 rounded-2xl border border-gray-100 space-y-3">
-                  <p className="text-xs text-gray-800 leading-relaxed font-serif bg-slate-50 p-3 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    Analysis Objectives & Questions
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      copyToClipboard(selectedRequest.questionPrompt, 'Question prompt')
+                    }
+                    className="inline-flex items-center gap-1 text-[11px] text-blue-600 hover:underline cursor-pointer"
+                  >
+                    <Copy className="w-3 h-3" />
+                    <span>Copy Prompt</span>
+                  </button>
+                </div>
+                <div className="p-4 rounded-2xl border border-gray-100 space-y-3 bg-white">
+                  <p className="text-xs text-gray-800 leading-relaxed font-serif bg-slate-50 p-3.5 rounded-xl border border-slate-100">
                     "{selectedRequest.questionPrompt}"
                   </p>
                   <div>
-                    <span className="text-[11px] font-semibold text-gray-500 block mb-1">
-                      Target Spatial Cells:
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedRequest.areaCellIds.map((id) => (
-                        <span
-                          key={id}
-                          className="px-2 py-1 rounded-md bg-blue-50 text-blue-700 font-mono text-[10px] font-semibold"
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[11px] font-semibold text-gray-500">
+                        Target Spatial Cells ({selectedRequest.areaCellIds.length}):
+                      </span>
+                      {selectedRequest.areaCellIds[0] && (
+                        <Link
+                          to={`/map?cellId=${selectedRequest.areaCellIds[0]}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] font-semibold text-blue-600 hover:underline inline-flex items-center gap-1"
                         >
-                          {id}
-                        </span>
+                          <MapPin className="w-3 h-3" />
+                          <span>Inspect on Map</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </Link>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedRequest.areaCellIds.map((id) => (
+                        <Link
+                          key={id}
+                          to={`/map?cellId=${id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-mono text-[11px] font-semibold transition-colors"
+                          title={`Click to inspect cell ${id} on interactive map`}
+                        >
+                          <MapPin className="w-3 h-3 text-blue-600" />
+                          <span>{id}</span>
+                          <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                        </Link>
                       ))}
                     </div>
                   </div>

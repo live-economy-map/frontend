@@ -7,6 +7,7 @@ import RequestReportModal from '@/components/reports/RequestReportModal';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { reportRequestsApi } from '@/api/reportRequests.api';
+import { authApi } from '@/api/auth.api';
 
 const renderWithProviders = (ui: React.ReactElement, options?: { isAuthenticated?: boolean }) => {
   const queryClient = new QueryClient({
@@ -43,6 +44,13 @@ const renderWithProviders = (ui: React.ReactElement, options?: { isAuthenticated
 describe('RequestReportModal', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    vi.spyOn(authApi, 'getMe').mockResolvedValue({
+      id: 'user-1',
+      email: 'developer@realestate.et',
+      fullName: 'Real Estate Developer',
+      role: 'USER',
+      isEmailVerified: true,
+    });
   });
 
   it('renders modal when open and pre-fills default cell and title', () => {
@@ -106,6 +114,10 @@ describe('RequestReportModal', () => {
     const telegramBtn = screen.getByRole('button', { name: /TELEGRAM/i });
     fireEvent.click(telegramBtn);
 
+    // Fill Telegram Handle
+    const telegramInput = screen.getByPlaceholderText(/@yourusername/i);
+    fireEvent.change(telegramInput, { target: { value: '@realestate_dev' } });
+
     // Submit
     const submitBtn = screen.getByRole('button', { name: /Submit Analysis Request/i });
     fireEvent.click(submitBtn);
@@ -115,6 +127,7 @@ describe('RequestReportModal', () => {
         expect.objectContaining({
           areaCellIds: ['cell-sarbet-442'],
           contactPreference: 'TELEGRAM',
+          telegramHandle: 'realestate_dev',
           questionPrompt: 'Investigate nighttime foot traffic trajectory vs built-up growth.',
         })
       );

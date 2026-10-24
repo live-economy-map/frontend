@@ -13,6 +13,9 @@ import {
   Plus,
   Loader2,
   ExternalLink,
+  Mail,
+  Phone,
+  Send,
 } from 'lucide-react';
 
 import RequestReportModal from '@/components/reports/RequestReportModal';
@@ -201,6 +204,27 @@ export default function MyRequestsPage() {
                         {request.orgType && (
                           <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
                             {request.orgType}
+                          </span>
+                        )}
+
+                        {request.contactPreference === 'TELEGRAM' && (
+                          <span className="text-xs text-sky-700 bg-sky-50 dark:bg-sky-950/60 dark:text-sky-300 px-2 py-0.5 rounded-md flex items-center gap-1 font-mono">
+                            <Send className="w-3 h-3" />
+                            {request.telegramHandle
+                              ? `@${request.telegramHandle.replace(/^@/, '')}`
+                              : 'Telegram'}
+                          </span>
+                        )}
+                        {request.contactPreference === 'PHONE' && (
+                          <span className="text-xs text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 rounded-md flex items-center gap-1 font-mono">
+                            <Phone className="w-3 h-3" />
+                            {request.phoneNumber || 'Phone'}
+                          </span>
+                        )}
+                        {(!request.contactPreference || request.contactPreference === 'EMAIL') && (
+                          <span className="text-xs text-blue-700 bg-blue-50 dark:bg-blue-950/60 dark:text-blue-300 px-2 py-0.5 rounded-md flex items-center gap-1">
+                            <Mail className="w-3 h-3" />
+                            Email
                           </span>
                         )}
                       </div>

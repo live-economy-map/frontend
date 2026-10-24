@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useAuth } from '@/context/AuthContext';
-import { X, User, Building, Mail, Loader2 } from 'lucide-react';
+import { X, User, Building, Mail, Phone, Send, Loader2 } from 'lucide-react';
 
 interface ProfileSettingsModalProps {
   isOpen: boolean;
@@ -13,12 +13,22 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
 
   const [fullName, setFullName] = useState('');
   const [organizationName, setOrganizationName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [telegramHandle, setTelegramHandle] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (user) {
       setFullName(user.fullName || '');
       setOrganizationName(user.organizationName || '');
+      setPhoneNumber(user.phoneNumber || '');
+      setTelegramHandle(
+        user.telegramHandle
+          ? user.telegramHandle.startsWith('@')
+            ? user.telegramHandle
+            : `@${user.telegramHandle}`
+          : ''
+      );
     }
   }, [user, isOpen]);
 
@@ -31,6 +41,8 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
       await updateProfile({
         fullName: fullName.trim() || undefined,
         organizationName: organizationName.trim() || undefined,
+        phoneNumber: phoneNumber.trim() || undefined,
+        telegramHandle: telegramHandle.trim().replace(/^@/, '') || undefined,
       });
       onClose();
     } catch {
@@ -119,6 +131,40 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
                 placeholder="Addis Ababa University / Ministry of Innovation"
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white"
               />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                Phone Number
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="+251 91 123 4567"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                Telegram Handle
+              </label>
+              <div className="relative">
+                <Send className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={telegramHandle}
+                  onChange={(e) => setTelegramHandle(e.target.value)}
+                  placeholder="@username"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                />
+              </div>
             </div>
           </div>
 

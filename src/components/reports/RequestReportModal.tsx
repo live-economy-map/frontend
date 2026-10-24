@@ -44,7 +44,7 @@ export default function RequestReportModal({
   defaultCellId,
   defaultAreaLabel,
 }: RequestReportModalProps) {
-  const { isAuthenticated, openAuthModal } = useAuth();
+  const { user, isAuthenticated, openAuthModal } = useAuth();
 
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -54,6 +54,8 @@ export default function RequestReportModal({
   const [cellIdsInput, setCellIdsInput] = useState('');
   const [orgType, setOrgType] = useState('Commercial Real Estate Developer');
   const [contactPreference, setContactPreference] = useState<ContactPreference>('EMAIL');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [telegramHandle, setTelegramHandle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -72,8 +74,16 @@ export default function RequestReportModal({
       setCellIdsInput('');
       setTitle('Addis Ababa Spatial Economic Activity Deep-Dive');
     }
+    if (user) {
+      if (user.phoneNumber) setPhoneNumber(user.phoneNumber);
+      if (user.telegramHandle) {
+        setTelegramHandle(
+          user.telegramHandle.startsWith('@') ? user.telegramHandle : `@${user.telegramHandle}`
+        );
+      }
+    }
     setErrorMessage(null);
-  }, [defaultCellId, defaultAreaLabel, isOpen]);
+  }, [defaultCellId, defaultAreaLabel, isOpen, user]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -118,6 +128,18 @@ export default function RequestReportModal({
       return;
     }
 
+    if (contactPreference === 'PHONE' && !phoneNumber.trim()) {
+      setErrorMessage('Please provide a contact phone number so our research team can reach you.');
+      return;
+    }
+
+    if (contactPreference === 'TELEGRAM' && !telegramHandle.trim()) {
+      setErrorMessage(
+        'Please provide your Telegram username (@handle) so our research team can reach you.'
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
       await reportRequestsApi.createRequest({
@@ -126,6 +148,8 @@ export default function RequestReportModal({
         areaCellIds: cells,
         orgType,
         contactPreference,
+        phoneNumber: phoneNumber.trim() || undefined,
+        telegramHandle: telegramHandle.trim().replace(/^@/, '') || undefined,
       });
 
       toast.success(
@@ -311,6 +335,65 @@ export default function RequestReportModal({
               </div>
             </div>
           </div>
+
+          {/* Dynamic Contact Channel Input */}
+          {contactPreference === 'PHONE' && (
+            <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 space-y-1.5">
+              <label className="block text-xs font-semibold text-gray-800 dark:text-gray-200">
+                Contact Phone Number <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
+                <input
+                  type="tel"
+                  required
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="+251 91 123 4567"
+                  className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                />
+              </div>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                Our spatial analysts will call or SMS you directly regarding this request.
+              </p>
+            </div>
+          )}
+
+          {contactPreference === 'TELEGRAM' && (
+            <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 space-y-1.5">
+              <label className="block text-xs font-semibold text-gray-800 dark:text-gray-200">
+                Telegram Handle / Username <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <Send className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
+                <input
+                  type="text"
+                  required
+                  value={telegramHandle}
+                  onChange={(e) => setTelegramHandle(e.target.value)}
+                  placeholder="@yourusername"
+                  className="w-full pl-10 pr-3.5 py-2 rounded-xl border border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-800 text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                />
+              </div>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                Our spatial research desk will message you directly on Telegram with findings and
+                download links.
+              </p>
+            </div>
+          )}
+
+          {contactPreference === 'EMAIL' && (
+            <div className="p-3 rounded-2xl bg-gray-50 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-800 text-xs text-gray-600 dark:text-gray-300 flex items-center gap-2.5">
+              <Mail className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>
+                Report deliverables and milestone updates will be sent to{' '}
+                <strong className="text-gray-900 dark:text-white font-mono">
+                  {user?.email || 'your registered account email'}
+                </strong>
+                .
+              </span>
+            </div>
+          )}
 
           <div className="pt-2 flex items-center justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
             <button
