@@ -163,6 +163,26 @@ export default function PublicLayout() {
                         </span>
                       </div>
                       <p className="text-[11px] text-gray-400 truncate mt-0.5">{user?.email}</p>
+
+                      {/* Plan Status Badge */}
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+                        <span
+                          className={cn(
+                            'px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border',
+                            user?.planTier === 'ENTERPRISE'
+                              ? 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-300'
+                              : user?.planTier === 'PRO'
+                                ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300'
+                                : 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400'
+                          )}
+                        >
+                          {user?.plan || 'Free Plan'}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span>Active</span>
+                        </span>
+                      </div>
                     </div>
 
                     {/* Navigation Items */}

@@ -142,7 +142,7 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
       }),
     onSuccess: (data) => {
       if (data.checkoutUrl) {
-        toast.info('Redirecting to secure Chapa payment portal…');
+        toast.info('Activating your subscription…');
         window.location.href = data.checkoutUrl;
       }
     },
@@ -153,6 +153,17 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
 
   const rawPlans = remotePlans && remotePlans.length > 0 ? remotePlans : DEFAULT_PLANS;
   const plans = rawPlans.map(normalizePlan);
+
+  const getSubscriptionTier = (subPlan?: Plan): PlanTier => {
+    if (!subPlan) return 'FREE';
+    if (subPlan.tier) return subPlan.tier;
+    const name = (subPlan.name || '').toLowerCase();
+    if (name.includes('enterprise') || name.includes('institutional')) return 'ENTERPRISE';
+    if (name.includes('pro') || name.includes('analyst')) return 'PRO';
+    return 'FREE';
+  };
+
+  const currentTier: PlanTier = getSubscriptionTier(subscription?.plan);
 
   const handleSelectPlan = (plan: Plan) => {
     if (onPlanSelected) {
@@ -165,24 +176,13 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
       return;
     }
 
-    if (plan.tier === 'FREE') {
-      toast.info('You are already on the Free tier.');
+    if (currentTier === plan.tier) {
+      toast.info(`You are already on the ${plan.name} tier.`);
       return;
     }
 
     checkoutMutation.mutate(plan.id);
   };
-
-  const getSubscriptionTier = (subPlan?: Plan): PlanTier => {
-    if (!subPlan) return 'FREE';
-    if (subPlan.tier) return subPlan.tier;
-    const name = (subPlan.name || '').toLowerCase();
-    if (name.includes('enterprise') || name.includes('institutional')) return 'ENTERPRISE';
-    if (name.includes('pro') || name.includes('analyst')) return 'PRO';
-    return 'FREE';
-  };
-
-  const currentTier: PlanTier = getSubscriptionTier(subscription?.plan);
 
   return (
     <div className="py-8 px-4 max-w-7xl mx-auto space-y-10">
@@ -196,7 +196,7 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
         </h2>
         <p className="text-sm text-gray-500 leading-relaxed">
           From neighborhood exploration to institutional satellite surveillance and automated REST
-          API pipelines. Local payment processed securely via Chapa.
+          API pipelines. Immediate automated subscription activation.
         </p>
       </div>
 
@@ -249,7 +249,7 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
                   <p className="text-xs text-gray-400 mt-1">
                     {plan.tier === 'FREE'
                       ? 'No credit card required'
-                      : 'Billed monthly via Chapa (Telebirr, CBE, Cards)'}
+                      : 'Direct automated monthly activation'}
                   </p>
                 </div>
 

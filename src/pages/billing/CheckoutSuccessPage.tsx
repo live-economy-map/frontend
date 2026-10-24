@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { billingApi } from '@/api/billing.api';
+import { useAuth } from '@/context/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatApiError } from '@/lib/axios';
 import {
@@ -20,6 +21,7 @@ export default function CheckoutSuccessPage() {
   const [searchParams] = useSearchParams();
   const txRef = searchParams.get('txRef') || searchParams.get('trx_ref') || searchParams.get('ref');
   const queryClient = useQueryClient();
+  const { refreshUser, user } = useAuth();
 
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [message, setMessage] = useState<string>('');
@@ -39,8 +41,10 @@ export default function CheckoutSuccessPage() {
       .verifyCheckout(txRef)
       .then((res) => {
         setStatus('success');
-        setMessage(res.message || 'Payment successfully processed via Chapa!');
+        setMessage(res.message || 'Subscription successfully activated!');
         queryClient.invalidateQueries({ queryKey: ['my-subscription'] });
+        queryClient.invalidateQueries({ queryKey: ['billing-plans'] });
+        refreshUser();
       })
       .catch((err) => {
         setStatus('error');
@@ -57,7 +61,7 @@ export default function CheckoutSuccessPage() {
           <div className="space-y-4 py-8">
             <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto" />
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              Verifying your payment with Chapa…
+              Activating your subscription…
             </h2>
             <p className="text-xs text-gray-500 font-mono">Reference: {txRef}</p>
           </div>
@@ -74,7 +78,7 @@ export default function CheckoutSuccessPage() {
                 Payment Confirmed
               </span>
               <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-2">
-                Welcome to Analyst Pro!
+                Welcome to {user?.plan || 'Analyst Pro'}!
               </h2>
               <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 max-w-md mx-auto">
                 {message ||
@@ -130,7 +134,7 @@ export default function CheckoutSuccessPage() {
                 Payment Verification Failed
               </h2>
               <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-                {message || 'Unable to confirm payment transaction with Chapa.'}
+                {message || 'Unable to confirm subscription activation.'}
               </p>
             </div>
 

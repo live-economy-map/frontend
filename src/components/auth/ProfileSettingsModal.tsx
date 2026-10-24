@@ -1,7 +1,22 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { X, User, Building, Mail, Phone, Send, Loader2 } from 'lucide-react';
+import {
+  X,
+  User,
+  Building,
+  Mail,
+  Phone,
+  Send,
+  Loader2,
+  Zap,
+  Shield,
+  Download,
+  Bell,
+  ArrowRight,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ProfileSettingsModalProps {
   isOpen: boolean;
@@ -10,6 +25,7 @@ interface ProfileSettingsModalProps {
 
 export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSettingsModalProps) {
   const { user, updateProfile } = useAuth();
+  const navigate = useNavigate();
 
   const [fullName, setFullName] = useState('');
   const [organizationName, setOrganizationName] = useState('');
@@ -52,6 +68,12 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
     }
   };
 
+  const planName = user.plan || user.subscription?.plan?.name || 'Free Tier';
+  const isEnterprise =
+    user.planTier === 'ENTERPRISE' || planName.toLowerCase().includes('enterprise');
+  const isPro = user.planTier === 'PRO' || planName.toLowerCase().includes('pro');
+  const isFree = !isEnterprise && !isPro;
+
   if (typeof document === 'undefined') return null;
 
   return createPortal(
@@ -77,6 +99,84 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
           </button>
         </div>
 
+        {/* Subscription Plan & Profile Status Card */}
+        <div className="p-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-slate-50/80 dark:bg-gray-800/50 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div
+                className={cn(
+                  'w-9 h-9 rounded-xl flex items-center justify-center shrink-0',
+                  isEnterprise
+                    ? 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300'
+                    : isPro
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+                      : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                )}
+              >
+                {isEnterprise ? (
+                  <Building className="w-4 h-4" />
+                ) : isPro ? (
+                  <Zap className="w-4 h-4" />
+                ) : (
+                  <Shield className="w-4 h-4" />
+                )}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-gray-900 dark:text-white">
+                    {planName}
+                  </span>
+                  <span
+                    className={cn(
+                      'px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border',
+                      isEnterprise
+                        ? 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-300'
+                        : isPro
+                          ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300'
+                          : 'bg-gray-100 text-gray-600 border-gray-300 dark:bg-gray-800 dark:text-gray-400'
+                    )}
+                  >
+                    {isEnterprise ? 'ENTERPRISE' : isPro ? 'ANALYST PRO' : 'FREE TIER'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-gray-500 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-emerald-600 font-semibold">
+                    {user.planStatus === 'ACTIVE' || !isFree
+                      ? 'Active Plan Status'
+                      : 'Standard Access'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                navigate('/pricing');
+              }}
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-blue-600 dark:text-blue-400 border border-gray-200 dark:border-gray-600 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+            >
+              <span>{isFree ? 'Upgrade' : 'Change Plan'}</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+
+          <div className="pt-2 border-t border-gray-200 dark:border-gray-700/60 grid grid-cols-2 gap-2 text-[11px] text-gray-600 dark:text-gray-300">
+            <div className="flex items-center gap-1.5">
+              <Download
+                className={cn('w-3.5 h-3.5', !isFree ? 'text-blue-600' : 'text-gray-400')}
+              />
+              <span>{!isFree ? 'CSV/JSON Data Export' : 'Export: Limited'}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Bell className={cn('w-3.5 h-3.5', !isFree ? 'text-blue-600' : 'text-gray-400')} />
+              <span>{!isFree ? 'Spatial Anomaly Alerts' : 'Alerts: Disabled'}</span>
+            </div>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
@@ -92,7 +192,7 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
               />
             </div>
             <p className="text-[10px] text-gray-400 mt-1">
-              Account status:{' '}
+              Email verification:{' '}
               {user.isEmailVerified ? (
                 <span className="text-emerald-600 font-semibold">Verified</span>
               ) : (

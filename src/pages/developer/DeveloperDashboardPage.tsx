@@ -82,6 +82,10 @@ export default function DeveloperDashboardPage() {
     createKeyMutation.mutate();
   };
 
+  const handleRevoke = (id: string) => {
+    revokeKeyMutation.mutate(id);
+  };
+
   const handleCopyText = (text: string, setter: (val: boolean) => void) => {
     navigator.clipboard.writeText(text);
     setter(true);
@@ -253,7 +257,7 @@ console.log("Addis Ababa cells:", data);`,
                 <ApiKeyCard
                   key={key.id}
                   apiKey={key}
-                  onRevoke={(id) => revokeKeyMutation.mutate(id)}
+                  onRevoke={handleRevoke}
                   isRevoking={revokeKeyMutation.isPending}
                 />
               ))}

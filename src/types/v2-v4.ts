@@ -15,6 +15,10 @@ export interface User {
   telegramHandle?: string | null;
   isEmailVerified: boolean;
   createdAt?: string;
+  plan?: string;
+  planTier?: 'FREE' | 'PRO' | 'ENTERPRISE';
+  planStatus?: string;
+  subscription?: Subscription | null;
 }
 
 export interface AuthResponse {
