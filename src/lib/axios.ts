@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { env } from '@/config/env';
-import type { ApiResponse } from '@/types';
 
 const normalizedBaseUrl = (env.VITE_API_URL || '').replace(/\/+$/, '');
 
@@ -41,9 +40,21 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
-    const body = response.data as ApiResponse<unknown>;
-    if (body && typeof body === 'object' && 'data' in body) {
-      response.data = body.data;
+    const body = response.data;
+    if (
+      body &&
+      typeof body === 'object' &&
+      !(typeof Blob !== 'undefined' && body instanceof Blob) &&
+      'data' in body
+    ) {
+      const envelope = body as { data?: unknown; success?: boolean; message?: string };
+      if (envelope.data !== null && envelope.data !== undefined) {
+        response.data = envelope.data;
+      } else if (envelope.success !== undefined) {
+        response.data = { success: envelope.success, message: envelope.message };
+      } else {
+        response.data = envelope.data;
+      }
     }
     return response;
   },
@@ -64,9 +75,12 @@ export function formatApiError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data;
     if (data && typeof data === 'object') {
-      const errs = (data as { errors?: string[] }).errors;
+      const errs = (data as { errors?: Array<string | { message?: string }> }).errors;
       if (Array.isArray(errs) && errs.length > 0) {
-        return errs.join(', ');
+        return errs
+          .map((item) => (typeof item === 'string' ? item : item?.message || JSON.stringify(item)))
+          .filter(Boolean)
+          .join(', ');
       }
       const msg = (data as { message?: string }).message;
       if (msg) return msg;
