@@ -1,5 +1,6 @@
 // src/components/auth/AuthModal.tsx
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth, type AuthModalTab } from '@/context/AuthContext';
 import { authApi } from '@/api/auth.api';
 import { formatApiError } from '@/lib/axios';
@@ -168,19 +169,23 @@ export default function AuthModal() {
     }
   };
 
-  return (
+  if (!isAuthModalOpen) return null;
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) closeAuthModal();
       }}
     >
       <div
         ref={modalRef}
-        className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden transform transition-all"
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden transform transition-all my-auto max-h-[90vh] overflow-y-auto"
       >
         {/* Modal Header */}
         <div className="relative px-6 pt-6 pb-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
@@ -518,6 +523,7 @@ export default function AuthModal() {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

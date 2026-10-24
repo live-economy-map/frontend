@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '@/context/AuthContext';
 import { X, User, Building, Mail, Loader2 } from 'lucide-react';
 
@@ -39,16 +40,21 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
     }
   };
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6 space-y-5">
+      <div
+        className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-800 p-6 space-y-5 my-auto max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2">
             <User className="w-5 h-5 text-blue-600" />
@@ -134,6 +140,7 @@ export default function ProfileSettingsModal({ isOpen, onClose }: ProfileSetting
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
