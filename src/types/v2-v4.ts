@@ -180,10 +180,18 @@ export type PlanTier = 'FREE' | 'PRO' | 'ENTERPRISE';
 export interface Plan {
   id: string;
   name: string;
-  tier: PlanTier;
+  tier?: PlanTier;
   priceEtb: number;
-  billingInterval: 'monthly' | 'yearly';
-  features: string[];
+  billingInterval?: 'monthly' | 'yearly';
+  interval?: string;
+  features?: string[];
+  canExport?: boolean;
+  canAlert?: boolean;
+  priorityReports?: boolean;
+  maxAlerts?: number;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Subscription {

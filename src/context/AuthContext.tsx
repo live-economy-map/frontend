@@ -77,9 +77,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const freshUser = await authApi.getMe();
       setUser(freshUser);
       localStorage.setItem(USER_KEY, JSON.stringify(freshUser));
-    } catch {
-      // If fetching user profile fails with invalid token, logout
-      handleSetAuth(null, null);
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 401) {
+        handleSetAuth(null, null);
+      }
     }
   }, [token, handleSetAuth]);
 
@@ -95,8 +97,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(freshUser);
             localStorage.setItem(USER_KEY, JSON.stringify(freshUser));
           }
-        } catch {
-          if (mounted) {
+        } catch (err: unknown) {
+          const status = (err as { response?: { status?: number } })?.response?.status;
+          if (mounted && status === 401) {
             handleSetAuth(null, null);
           }
         }

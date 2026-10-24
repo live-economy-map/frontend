@@ -7,6 +7,7 @@ import SavedAreasDrawer from '@/components/saved-areas/SavedAreasDrawer';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { savedAreasApi } from '@/api/savedAreas.api';
+import { authApi } from '@/api/auth.api';
 import type { SavedArea } from '@/types';
 
 const mockSavedAreas: SavedArea[] = [
@@ -63,6 +64,13 @@ const renderWithProviders = (ui: React.ReactElement, options?: { isAuthenticated
 describe('SavedAreasDrawer', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    vi.spyOn(authApi, 'getMe').mockResolvedValue({
+      id: 'user-1',
+      email: 'test@ecolens.org',
+      fullName: 'Test User',
+      role: 'USER',
+      isEmailVerified: true,
+    });
   });
 
   it('renders sign in prompt when user is unauthenticated', () => {

@@ -59,6 +59,66 @@ const DEFAULT_PLANS: Plan[] = [
   },
 ];
 
+function normalizePlan(raw: Plan): Plan {
+  const nameLower = (raw.name || '').toLowerCase();
+  let tier: PlanTier = raw.tier || 'FREE';
+  if (!raw.tier) {
+    if (nameLower.includes('enterprise') || nameLower.includes('institutional')) {
+      tier = 'ENTERPRISE';
+    } else if (nameLower.includes('pro') || nameLower.includes('analyst')) {
+      tier = 'PRO';
+    } else {
+      tier = 'FREE';
+    }
+  }
+
+  // Handle price if returned in cents (e.g. 250000 -> 2500 ETB, 1500000 -> 15000 ETB)
+  let displayPrice = raw.priceEtb || 0;
+  if (displayPrice >= 100000) {
+    displayPrice = displayPrice / 100;
+  }
+
+  let features = Array.isArray(raw.features) && raw.features.length > 0 ? raw.features : null;
+  if (!features) {
+    if (tier === 'FREE') {
+      features = [
+        'Interactive Addis Ababa heatmap',
+        'Recent composite activity scores',
+        'Up to 3 bookmarked saved areas',
+        'Public case study validations',
+        'Standard community support',
+      ];
+    } else if (tier === 'PRO') {
+      features = [
+        'Everything in Free, plus:',
+        'Full historical CSV & JSON spatial data export',
+        `${raw.maxAlerts ?? 10} custom spatial anomaly threshold alerts`,
+        'Priority turnaround on custom report requests',
+        'Granular VIIRS, GHSL & RWI multi-signal breakdowns',
+        'Detailed corridor sparkline trajectory analytics',
+      ];
+    } else {
+      features = [
+        'Everything in Analyst Pro, plus:',
+        `${raw.maxAlerts ?? 50} spatial anomaly alerts & multi-cell watchlists`,
+        'Developer API platform access (300 RPM limit)',
+        'Multi-member institutional organization workspaces',
+        'Dedicated spatial data engineer consultation',
+        'Custom spatial resolution & priority satellite feeds',
+      ];
+    }
+  }
+
+  return {
+    ...raw,
+    tier,
+    priceEtb: displayPrice,
+    billingInterval: (raw.interval?.toLowerCase() === 'yearly' ? 'yearly' : 'monthly') as
+      'monthly' | 'yearly',
+    features,
+  };
+}
+
 export default function PricingTable({ onPlanSelected }: PricingTableProps) {
   const { isAuthenticated, openAuthModal } = useAuth();
   const { toast } = useToast();
@@ -91,7 +151,8 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
     },
   });
 
-  const plans = remotePlans && remotePlans.length > 0 ? remotePlans : DEFAULT_PLANS;
+  const rawPlans = remotePlans && remotePlans.length > 0 ? remotePlans : DEFAULT_PLANS;
+  const plans = rawPlans.map(normalizePlan);
 
   const handleSelectPlan = (plan: Plan) => {
     if (onPlanSelected) {
@@ -112,7 +173,16 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
     checkoutMutation.mutate(plan.id);
   };
 
-  const currentTier: PlanTier = (subscription?.plan?.tier as PlanTier) || 'FREE';
+  const getSubscriptionTier = (subPlan?: Plan): PlanTier => {
+    if (!subPlan) return 'FREE';
+    if (subPlan.tier) return subPlan.tier;
+    const name = (subPlan.name || '').toLowerCase();
+    if (name.includes('enterprise') || name.includes('institutional')) return 'ENTERPRISE';
+    if (name.includes('pro') || name.includes('analyst')) return 'PRO';
+    return 'FREE';
+  };
+
+  const currentTier: PlanTier = getSubscriptionTier(subscription?.plan);
 
   return (
     <div className="py-8 px-4 max-w-7xl mx-auto space-y-10">
@@ -189,7 +259,7 @@ export default function PricingTable({ onPlanSelected }: PricingTableProps) {
                     What's included:
                   </p>
                   <ul className="space-y-2.5">
-                    {plan.features.map((feature, idx) => (
+                    {(plan.features || []).map((feature, idx) => (
                       <li
                         key={idx}
                         className="flex items-start gap-2.5 text-xs text-gray-700 dark:text-gray-300 leading-snug"

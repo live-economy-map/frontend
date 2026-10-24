@@ -85,4 +85,44 @@ describe('PricingTable', () => {
       );
     });
   });
+
+  it('renders backend plans when features array is omitted and price is in cents', async () => {
+    vi.spyOn(billingApi, 'getPlans').mockResolvedValue([
+      {
+        id: '3742d78b-4ad2-41d3-9d55-dd58d2dc4685',
+        name: 'Free',
+        priceEtb: 0,
+        canExport: false,
+        canAlert: false,
+        maxAlerts: 0,
+      },
+      {
+        id: '5042c9d6-31c4-401f-b8d0-90c2d21faece',
+        name: 'Analyst Pro',
+        priceEtb: 250000,
+        canExport: true,
+        canAlert: true,
+        maxAlerts: 10,
+      },
+      {
+        id: '6704a942-6216-4f14-80c5-3c142e2d50c1',
+        name: 'Institutional Enterprise',
+        priceEtb: 1500000,
+        canExport: true,
+        canAlert: true,
+        maxAlerts: 50,
+      },
+    ]);
+
+    renderWithProviders(<PricingTable />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'Analyst Pro' })).toBeInTheDocument();
+      expect(screen.getByText('2,500 ETB')).toBeInTheDocument();
+      expect(screen.getByText('15,000 ETB')).toBeInTheDocument();
+      expect(
+        screen.getByText(/Full historical CSV & JSON spatial data export/i)
+      ).toBeInTheDocument();
+    });
+  });
 });
