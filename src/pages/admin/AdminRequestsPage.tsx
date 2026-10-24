@@ -22,6 +22,8 @@ import {
   Copy,
   Check,
   MapPin,
+  AlertCircle,
+  RotateCw,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ReportRequest, ReportRequestStatus, RequestPriority } from '@/types';
@@ -70,7 +72,7 @@ export default function AdminRequestsPage() {
   // AI Draft Modal State
   const [isAiDraftOpen, setIsAiDraftOpen] = useState(false);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['admin-report-requests', statusFilter, priorityFilter, searchQuery, page],
     queryFn: () =>
       adminReportRequestsApi.getRequests({
@@ -231,8 +233,30 @@ export default function AdminRequestsPage() {
             <p className="text-xs">Loading analysis requests…</p>
           </div>
         ) : isError ? (
-          <div className="p-8 text-center text-xs text-red-600">
-            Failed to load report requests.
+          <div className="p-12 text-center space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto shadow-xs">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-gray-900">Failed to load report requests</p>
+              <p className="text-xs text-red-600 max-w-md mx-auto">{formatApiError(error)}</p>
+            </div>
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => refetch()}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                <RotateCw className="w-3.5 h-3.5" />
+                <span>Try Again</span>
+              </button>
+              <Link
+                to="/admin/login"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              >
+                <span>Sign in as Administrator</span>
+              </Link>
+            </div>
           </div>
         ) : requests.length === 0 ? (
           <div className="p-16 text-center space-y-3">

@@ -10,21 +10,29 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  let token = localStorage.getItem('auth_token');
-  if (!token) {
-    const adminStorage =
-      localStorage.getItem('admin-auth-storage') || localStorage.getItem('auth-storage');
-    if (adminStorage) {
-      try {
-        const { state } = JSON.parse(adminStorage);
-        if (state?.token) {
-          token = state.token;
-        }
-      } catch {
-        // malformed storage
+  let adminToken: string | null = null;
+  const adminStorage =
+    localStorage.getItem('admin-auth-storage') || localStorage.getItem('auth-storage');
+  if (adminStorage) {
+    try {
+      const { state } = JSON.parse(adminStorage);
+      if (state?.token) {
+        adminToken = state.token;
       }
+    } catch {
+      // malformed storage
     }
   }
+
+  const userToken = localStorage.getItem('auth_token');
+
+  // If making an admin request, prioritize adminToken, fallback to userToken
+  const isAdminRequest =
+    config.url?.startsWith('/admin') ||
+    config.url?.includes('/admin/') ||
+    config.url?.includes('/admin');
+
+  const token = isAdminRequest ? adminToken || userToken : userToken || adminToken;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -59,13 +67,21 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    const isAdminUrl =
+      error.config?.url?.startsWith('/admin') ||
+      error.config?.url?.includes('/admin/') ||
+      error.config?.url?.includes('/admin');
+
     if (
-      error.response?.status === 401 &&
-      error.config?.url?.includes('/admin/') &&
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      isAdminUrl &&
       !error.config?.url?.includes('/admin/auth/login')
     ) {
-      localStorage.removeItem('admin-auth-storage');
-      window.location.href = '/admin/login';
+      // Only clear storage and redirect if user is actively in the admin section
+      if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+        localStorage.removeItem('admin-auth-storage');
+        window.location.href = '/admin/login';
+      }
     }
     return Promise.reject(error);
   }
