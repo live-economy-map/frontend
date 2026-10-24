@@ -1,5 +1,5 @@
 // src/components/admin/AIDraftEditor.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { adminDraftsApi } from '@/api/admin/drafts.api';
 import { useToast } from '@/context/ToastContext';
 import { formatApiError } from '@/lib/axios';
