@@ -57,12 +57,30 @@ export const authApi = {
   },
 
   async getMe(): Promise<User> {
-    const response = await api.get<User>('/me');
-    return response.data;
+    try {
+      const response = await api.get<User>('/auth/me');
+      return response.data;
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 404) {
+        const response = await api.get<User>('/me');
+        return response.data;
+      }
+      throw err;
+    }
   },
 
   async updateMe(data: UpdateProfileDTO): Promise<User> {
-    const response = await api.patch<User>('/me', data);
-    return response.data;
+    try {
+      const response = await api.patch<User>('/auth/me', data);
+      return response.data;
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 404) {
+        const response = await api.patch<User>('/me', data);
+        return response.data;
+      }
+      throw err;
+    }
   },
 };

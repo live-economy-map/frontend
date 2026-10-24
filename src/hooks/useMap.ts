@@ -1,8 +1,15 @@
 // src/hooks/useMap.ts
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '@/lib/axios';
+import { mapApi } from '@/api/map.api';
 import { QUERY_KEYS } from '@/constants';
-import type { GrowthCell, CellDetail, RawLayerCell, MapSearchResult } from '@/types';
+import type {
+  GrowthCell,
+  CellDetail,
+  RawLayerCell,
+  MapSearchResult,
+  CellChatRequest,
+} from '@/types';
 
 export function useMapCells(period?: string) {
   return useQuery({
@@ -123,5 +130,14 @@ export function useAvailablePeriods() {
       return data;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+export function useCellChat(cellId: string | null) {
+  return useMutation({
+    mutationFn: (payload: CellChatRequest) => {
+      if (!cellId) throw new Error('No cell selected for chat');
+      return mapApi.chatWithCell(cellId, payload);
+    },
   });
 }

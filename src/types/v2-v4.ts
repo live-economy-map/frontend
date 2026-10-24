@@ -368,3 +368,8 @@ export interface AddWatchlistItemDTO {
   gridCellId: string;
   notes?: string;
 }
+
+// ==========================================
+// V2-V4: Spatial AI Cell Chat
+// ==========================================
+export * from './map';

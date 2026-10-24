@@ -22,6 +22,7 @@ import {
 
 import RequestReportModal from '@/components/reports/RequestReportModal';
 import ExportModal from '@/components/export/ExportModal';
+import CellChatAssistant from '@/components/map/CellChatAssistant';
 import { cn } from '@/lib/utils';
 
 interface CellDetailPanelProps {
@@ -454,19 +455,14 @@ export default function CellDetailPanel({
                 </div>
               </div>
 
-              {/* AI Summary */}
-              <div>
-                <h3 className="text-[10px] text-text-muted uppercase font-bold tracking-wider mb-1">
-                  AI Synthesized Summary
-                </h3>
-                <div className="bg-white dark:bg-gray-850 rounded-2xl p-4 border border-border-base">
-                  <p className="text-xs text-gray-800 dark:text-gray-200 leading-relaxed font-serif">
-                    {data.aiSummary ?? (
-                      <span className="text-text-muted italic">Summary unavailable</span>
-                    )}
-                  </p>
-                </div>
-              </div>
+              {/* Interactive Spatial AI Chat Assistant */}
+              <CellChatAssistant
+                cellId={cellId}
+                areaLabel={data.areaLabel}
+                aiSummary={data.aiSummary}
+                compositeScore={data.compositeScore}
+                trend={data.trend}
+              />
             </>
           )}
         </div>
