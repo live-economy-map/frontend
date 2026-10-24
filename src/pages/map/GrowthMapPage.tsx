@@ -21,6 +21,14 @@ export default function GrowthMapPage() {
   const [highlightedCellIds, setHighlightedCellIds] = useState<string[]>([]);
   const [isLayerDropdownOpen, setIsLayerDropdownOpen] = useState(false);
 
+  const urlCellId = searchParams.get('cellId');
+  useEffect(() => {
+    if (urlCellId) {
+      setSelectedCellId(urlCellId);
+      setZoomToCellId(urlCellId);
+    }
+  }, [urlCellId]);
+
   const mapRef = useRef<GrowthMapCanvasRef>(null);
 
   const { data: periodsData, isLoading: isPeriodsLoading } = useAvailablePeriods();
