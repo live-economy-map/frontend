@@ -4,3 +4,4 @@ import * as real from './real/handlers';
 
 export const contentApi = USE_MOCK ? mock.contentApi : real.contentApi;
 export { USE_MOCK };
+export * from './map.api';

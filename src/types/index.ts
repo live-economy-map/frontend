@@ -158,3 +158,4 @@ export interface ScoreWeightConfig {
 
 // ---- Case Study Curation (admin) & DTOs ----
 export * from './dto';
+export * from './v2-v4';

@@ -15,6 +15,12 @@ const CaseStudiesListPage = lazy(() => import('@/pages/CaseStudiesListPage'));
 const CaseStudyDetailPage = lazy(() => import('@/pages/CaseStudyDetailPage'));
 const MethodologyPage = lazy(() => import('@/pages/MethodologyPage'));
 const AboutPage = lazy(() => import('@/pages/AboutPage'));
+const PricingPage = lazy(() => import('@/pages/billing/PricingPage'));
+const CheckoutSuccessPage = lazy(() => import('@/pages/billing/CheckoutSuccessPage'));
+const VerifyEmailPage = lazy(() => import('@/pages/auth/VerifyEmailPage'));
+const MyRequestsPage = lazy(() => import('@/pages/requests/MyRequestsPage'));
+const DeveloperDashboardPage = lazy(() => import('@/pages/developer/DeveloperDashboardPage'));
+const WatchlistsDashboardPage = lazy(() => import('@/pages/watchlists/WatchlistsDashboardPage'));
 
 // Admin pages
 const AdminLoginPage = lazy(() => import('@/pages/admin/AdminLoginPage'));
@@ -22,6 +28,7 @@ const AdminDashboardPage = lazy(() => import('@/pages/admin/AdminDashboardPage')
 const PipelineManagementPage = lazy(() => import('@/pages/admin/PipelineManagementPage'));
 const WeightConfigPage = lazy(() => import('@/pages/admin/WeightConfigPage'));
 const CaseStudyCurationPage = lazy(() => import('@/pages/admin/CaseStudyCurationPage'));
+const AdminRequestsPage = lazy(() => import('@/pages/admin/AdminRequestsPage'));
 
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
@@ -49,6 +56,12 @@ const router = createBrowserRouter([
       { path: ROUTES.CASE_STUDY_DETAIL, element: withSuspense(<CaseStudyDetailPage />) },
       { path: ROUTES.METHODOLOGY, element: withSuspense(<MethodologyPage />) },
       { path: ROUTES.ABOUT, element: withSuspense(<AboutPage />) },
+      { path: ROUTES.PRICING, element: withSuspense(<PricingPage />) },
+      { path: ROUTES.CHECKOUT_SUCCESS, element: withSuspense(<CheckoutSuccessPage />) },
+      { path: ROUTES.VERIFY_EMAIL, element: withSuspense(<VerifyEmailPage />) },
+      { path: ROUTES.MY_REQUESTS, element: withSuspense(<MyRequestsPage />) },
+      { path: ROUTES.DEVELOPER, element: withSuspense(<DeveloperDashboardPage />) },
+      { path: ROUTES.WATCHLISTS, element: withSuspense(<WatchlistsDashboardPage />) },
     ],
   },
 
@@ -90,6 +103,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.ADMIN_CASE_STUDIES,
             element: withSuspense(<CaseStudyCurationPage />),
+          },
+          {
+            path: ROUTES.ADMIN_REQUESTS,
+            element: withSuspense(<AdminRequestsPage />),
           },
         ],
       },

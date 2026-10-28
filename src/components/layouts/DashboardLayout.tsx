@@ -1,7 +1,16 @@
 // src/components/layouts/DashboardLayout.tsx
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Menu, X, Activity, SlidersHorizontal, BookOpen, LogOut, ArrowLeft } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Activity,
+  SlidersHorizontal,
+  BookOpen,
+  LogOut,
+  ArrowLeft,
+  FileText,
+} from 'lucide-react';
 import { AdminSidebar } from '@/components/common/AdminSidebar';
 import { ROUTES } from '@/constants';
 import { useAdminAuthStore } from '@/store/adminAuth.store';
@@ -13,6 +22,7 @@ const NAV_LINKS = [
   { label: 'Pipeline Health', to: ROUTES.ADMIN_PIPELINE, icon: Activity },
   { label: 'Weight Config', to: ROUTES.ADMIN_WEIGHT_CONFIGS, icon: SlidersHorizontal },
   { label: 'Case Studies', to: ROUTES.ADMIN_CASE_STUDIES, icon: BookOpen },
+  { label: 'Report Requests', to: ROUTES.ADMIN_REQUESTS, icon: FileText },
 ] as const;
 
 export default function DashboardLayout() {
