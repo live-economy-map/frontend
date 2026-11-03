@@ -22,6 +22,7 @@ import {
 import { useAboutContent } from '@/hooks/useContent';
 
 // ── 8x8 Matrix for Satellite Density Heatmap ────────────────────────────────
+// Data colors stay fixed on purpose: they encode severity, not theme.
 const GRID_COLORS: string[][] = [
   ['#dbeafe', '', '#dbeafe', '', '#dbeafe', '', '#dbeafe', ''],
   ['', '#dbeafe', '', '#dbeafe', '#dbeafe', '', '', '#dbeafe'],
@@ -36,7 +37,7 @@ const GRID_COLORS: string[][] = [
 function MiniHeatmap() {
   return (
     <div
-      className="grid gap-1.5 p-3 sm:p-4 rounded-3xl bg-white/60 backdrop-blur-sm shadow-inner"
+      className="grid gap-1.5 p-3 sm:p-4 rounded-3xl bg-surface/60 backdrop-blur-sm shadow-inner"
       style={{ gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' }}
       aria-label="Satellite Density Heatmap Matrix"
     >
@@ -180,24 +181,24 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-background text-on-surface flex flex-col selection:bg-primary/20">
       {/* ── 1. Hero Section (One Full Screen Above the Fold) ── */}
       <section className="min-h-[calc(100vh-64px)] md:h-[calc(100vh-64px)] grid grid-cols-1 md:grid-cols-2 items-center">
         {/* Left Column: Copy & CTAs */}
         <div className="flex flex-col justify-center px-6 sm:px-10 lg:px-16 xl:px-20 py-8 lg:py-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-1 sm:mb-2">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface tracking-tight leading-tight mb-1 sm:mb-2">
             Understand the
             <br />
             Hidden Economy.
           </h1>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-600 tracking-tight leading-tight mb-4 sm:mb-5">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary tracking-tight leading-tight mb-4 sm:mb-5">
             See What Others
             <br />
             Miss.
           </h2>
 
-          <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed max-w-md mb-6 sm:mb-8 font-normal">
+          <p className="text-on-surface-variant text-sm sm:text-base lg:text-lg leading-relaxed max-w-md mb-6 sm:mb-8 font-normal">
             We combine high-resolution satellite data, nighttime radiance, and infrastructure
             signals to detect economic activity that traditional metrics cannot capture.
           </p>
@@ -205,12 +206,12 @@ export default function LandingPage() {
           <div className="flex items-center gap-4 flex-wrap">
             <button
               onClick={() => navigate('/map')}
-              className="inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 sm:px-7 py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg shadow-blue-500/20 active:scale-[0.98] cursor-pointer group"
+              className="inline-flex items-center justify-center gap-2.5 bg-primary hover:bg-primary-hover text-primary-foreground text-sm font-semibold px-6 sm:px-7 py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg shadow-primary/20 active:scale-[0.98] cursor-pointer group"
             >
               <img
                 src="/ecolens-tr.png"
                 alt="EcoLens"
-                className="h-4.5 w-auto brightness-0 invert object-contain"
+                className="h-4.5 w-auto brightness-0 invert dark:invert-0 dark:brightness-0 object-contain"
               />
               <span>Explore the Map</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -218,7 +219,7 @@ export default function LandingPage() {
 
             <button
               onClick={() => navigate('/case-studies')}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-gray-900 px-3 py-3 transition-colors group cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-on-surface px-3 py-3 transition-colors group cursor-pointer"
             >
               View Case Studies
               <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -227,16 +228,16 @@ export default function LandingPage() {
         </div>
 
         {/* Right Column: Heatmap Visualization & Legend */}
-        <div className="relative flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50/50 px-6 sm:px-8 py-8 lg:py-10 overflow-hidden h-full min-h-[380px]">
+        <div className="relative flex items-center justify-center bg-gradient-to-br from-accent via-background to-accent/50 px-6 sm:px-8 py-8 lg:py-10 overflow-hidden h-full min-h-[380px]">
           {/* Subtle Ambient Radial Glow */}
-          <div className="absolute w-80 h-80 bg-blue-200/40 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute w-80 h-80 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
 
           {/* Heatmap Grid */}
           <MiniHeatmap />
 
           {/* Floating Severity Legend Card */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-3 sm:p-4">
-            <p className="text-[11px] font-bold text-gray-900 tracking-wide mb-2">
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 bg-surface/95 backdrop-blur-md rounded-2xl shadow-lg border border-border-base p-3 sm:p-4">
+            <p className="text-[11px] font-bold text-on-surface tracking-wide mb-2">
               Latest Severity Hotspots
             </p>
             {[
@@ -250,7 +251,7 @@ export default function LandingPage() {
                   className="w-3 h-3 rounded-[3px] shadow-xs shrink-0"
                   style={{ backgroundColor: color }}
                 />
-                <span className="text-[11px] font-medium text-gray-600">{label}</span>
+                <span className="text-[11px] font-medium text-on-surface-variant">{label}</span>
               </div>
             ))}
           </div>
@@ -258,36 +259,36 @@ export default function LandingPage() {
       </section>
 
       {/* ── 2. Highlight Statistics Row (About Page Analytics) ── */}
-      <section className="border-t border-gray-100 bg-white">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-100">
+      <section className="border-t border-border-base bg-surface">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border-base">
           {stats.map(({ icon: Icon, value, label, sub }) => (
             <div
               key={label}
-              className="flex flex-col items-center text-center px-6 py-9 hover:bg-gray-50/50 transition-colors"
+              className="flex flex-col items-center text-center px-6 py-9 hover:bg-surface-container-low transition-colors"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center mb-3">
-                <Icon className="h-5 w-5 text-blue-600" />
+              <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-3">
+                <Icon className="h-5 w-5 text-primary" />
               </div>
-              <p className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+              <p className="text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">
                 {value}
               </p>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mt-1.5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-text-muted mt-1.5">
                 {label}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
+              <p className="text-xs text-on-surface-variant mt-0.5">{sub}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── 3. What EcoLens Means ── */}
-      <section className="border-t border-gray-100 bg-gradient-to-br from-blue-50/40 via-white to-gray-50/60 py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+      <section className="border-t border-border-base bg-gradient-to-br from-accent/40 via-background to-surface-container-low py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
-              What Does <span className="text-blue-600">EcoLens</span> Mean?
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight">
+              What Does <span className="text-primary">EcoLens</span> Mean?
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+            <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
               EcoLens bridges macroeconomic data gaps by fusing real-world economic dynamics with
               high-resolution orbital earth-observation optics.
             </p>
@@ -295,19 +296,20 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             {/* ECO Pillar */}
-            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xs flex flex-col justify-between hover:border-blue-200 transition-all hover:shadow-md">
+            <div className="bg-surface rounded-3xl p-8 sm:p-10 border border-border-base shadow-xs flex flex-col justify-between hover:border-primary/40 transition-all hover:shadow-md">
               <div className="space-y-4">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                  <span className="text-blue-600">Eco</span> · Economic Intelligence
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">
+                  <span className="text-primary">Eco</span> · Economic Intelligence
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                  Stands for <strong>real-world economic dynamics</strong>—uncovering unrecorded
-                  commerce, informal industrial emergence, logistical nodes, and ground-level
-                  prosperity gradients that conventional registries often miss.
+                <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                  Stands for{' '}
+                  <strong className="text-on-surface">real-world economic dynamics</strong>
+                  —uncovering unrecorded commerce, informal industrial emergence, logistical nodes,
+                  and ground-level prosperity gradients that conventional registries often miss.
                 </p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
+              <div className="mt-8 pt-6 border-t border-border-base space-y-3">
                 {[
                   'Captures unrecorded commerce and informal market vibrancy',
                   'Tracks rapid infrastructure build-out across expanding corridors',
@@ -315,9 +317,9 @@ export default function LandingPage() {
                 ].map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-700"
+                    className="flex items-start gap-2.5 text-xs sm:text-sm text-on-surface-variant"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -325,19 +327,20 @@ export default function LandingPage() {
             </div>
 
             {/* LENS Pillar */}
-            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xs flex flex-col justify-between hover:border-blue-200 transition-all hover:shadow-md">
+            <div className="bg-surface rounded-3xl p-8 sm:p-10 border border-border-base shadow-xs flex flex-col justify-between hover:border-primary/40 transition-all hover:shadow-md">
               <div className="space-y-4">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                  <span className="text-emerald-600">Lens</span> · Spatial Observation
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">
+                  <span className="text-success">Lens</span> · Spatial Observation
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                  Stands for the <strong>high-resolution orbital perspective</strong>—fusing
-                  nocturnal luminosity emissions, SAR radar building footprints, and micro-wealth
-                  proxies into an objective, unfiltered optical lens.
+                <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                  Stands for the{' '}
+                  <strong className="text-on-surface">high-resolution orbital perspective</strong>
+                  —fusing nocturnal luminosity emissions, SAR radar building footprints, and
+                  micro-wealth proxies into an objective, unfiltered optical lens.
                 </p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
+              <div className="mt-8 pt-6 border-t border-border-base space-y-3">
                 {[
                   'Nighttime lights radiance (VIIRS) resolving 24-hour activity',
                   'Physical building footprints and structural emergence (GHSL)',
@@ -345,9 +348,9 @@ export default function LandingPage() {
                 ].map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-700"
+                    className="flex items-start gap-2.5 text-xs sm:text-sm text-on-surface-variant"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -358,13 +361,13 @@ export default function LandingPage() {
       </section>
 
       {/* ── 4. Earth Observation Layers & Data Architecture ── */}
-      <section className="border-t border-gray-100 bg-gradient-to-b from-white to-blue-50/30 py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+      <section className="border-t border-border-base bg-gradient-to-b from-background to-accent/30 py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight">
               Orbital Signals Powering the Index
             </h2>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-on-surface-variant">
               We ingest and harmonize three distinct remote sensing streams to isolate genuine
               economic growth signatures from seasonal variance and sensor noise.
             </p>
@@ -372,15 +375,15 @@ export default function LandingPage() {
 
           {/* Interactive Layer Selector */}
           <div className="flex justify-center">
-            <div className="inline-flex p-1.5 rounded-2xl bg-gray-100/80 border border-gray-200/80 gap-1.5">
+            <div className="inline-flex p-1.5 rounded-2xl bg-surface-container border border-border-base gap-1.5">
               {(['VIIRS', 'GHSL', 'RWI'] as const).map((key) => (
                 <button
                   key={key}
                   onClick={() => setActiveLayer(key)}
                   className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                     activeLayer === key
-                      ? 'bg-white text-blue-600 shadow-xs border border-gray-200/60'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                      ? 'bg-surface text-primary shadow-xs border border-border-base'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface/50'
                   }`}
                 >
                   {key} Layer
@@ -390,16 +393,16 @@ export default function LandingPage() {
           </div>
 
           {/* Active Layer Feature Card */}
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="bg-surface rounded-3xl border border-border-base shadow-sm p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+              <h3 className="text-xl sm:text-2xl font-bold text-on-surface">
                 {layerDetails[activeLayer].name}
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+              <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
                 {layerDetails[activeLayer].description}
               </p>
-              <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100 text-xs sm:text-sm text-blue-900 flex items-start gap-2.5">
-                <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+              <div className="p-4 rounded-xl bg-accent border border-primary/20 text-xs sm:text-sm text-accent-foreground flex items-start gap-2.5">
+                <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                 <span>{layerDetails[activeLayer].highlight}</span>
               </div>
             </div>
@@ -424,16 +427,16 @@ export default function LandingPage() {
               ].map(({ label, value, icon: Icon }) => (
                 <div
                   key={label}
-                  className="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 flex items-center gap-3.5"
+                  className="p-4 rounded-2xl bg-surface-container-low border border-border-base flex items-center gap-3.5"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-white text-blue-600 shadow-2xs flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-surface text-primary shadow-2xs flex items-center justify-center shrink-0">
                     <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
                       {label}
                     </p>
-                    <p className="text-xs sm:text-sm font-semibold text-gray-800">{value}</p>
+                    <p className="text-xs sm:text-sm font-semibold text-on-surface">{value}</p>
                   </div>
                 </div>
               ))}
@@ -443,13 +446,13 @@ export default function LandingPage() {
       </section>
 
       {/* ── 5. Key Analytical Capabilities ── */}
-      <section className="border-t border-gray-100 bg-white py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+      <section className="border-t border-border-base bg-surface py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight">
               Why Satellite Observational Intelligence?
             </h2>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-on-surface-variant">
               Bridging the gap between official macroeconomic data and fast-evolving physical growth
               on the ground.
             </p>
@@ -459,14 +462,16 @@ export default function LandingPage() {
             {capabilities.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
-                className="p-6 rounded-2xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-blue-200 hover:shadow-md transition-all flex flex-col justify-between"
+                className="p-6 rounded-2xl border border-border-base bg-surface-container-low hover:bg-surface hover:border-primary/40 hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div className="space-y-3">
-                  <div className="w-11 h-11 rounded-xl bg-blue-100/60 text-blue-600 flex items-center justify-center">
+                  <div className="w-11 h-11 rounded-xl bg-accent text-primary flex items-center justify-center">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-base font-bold text-gray-900">{title}</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{desc}</p>
+                  <h3 className="text-base font-bold text-on-surface">{title}</h3>
+                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -475,13 +480,13 @@ export default function LandingPage() {
       </section>
 
       {/* ── 6. End-to-End Discovery Pipeline ── */}
-      <section className="border-t border-gray-100 bg-gradient-to-b from-gray-50/60 to-white py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
+      <section className="border-t border-border-base bg-gradient-to-b from-surface-container-low to-background py-16 sm:py-20 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight">
               From Raw Orbit to Verified Insights
             </h2>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-on-surface-variant">
               A transparent, four-phase pipeline turning terabytes of satellite imagery into
               verified case studies.
             </p>
@@ -491,14 +496,16 @@ export default function LandingPage() {
             {workflowSteps.map(({ title, icon: Icon, desc }) => (
               <div
                 key={title}
-                className="relative bg-white p-6 rounded-2xl border border-gray-100 shadow-xs flex flex-col justify-between"
+                className="relative bg-surface p-6 rounded-2xl border border-border-base shadow-xs flex flex-col justify-between"
               >
                 <div className="space-y-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-accent text-primary flex items-center justify-center">
                     <Icon className="w-4.5 h-4.5" />
                   </div>
-                  <h3 className="text-base font-bold text-gray-900">{title}</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{desc}</p>
+                  <h3 className="text-base font-bold text-on-surface">{title}</h3>
+                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -506,8 +513,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 6. Final Call to Action Banner ── */}
-      <section className="border-t border-gray-100 bg-gray-900 text-white py-14 px-6 sm:px-12 lg:px-20">
+      {/* ── 7. Final Call to Action Banner (intentionally dark in both themes) ── */}
+      <section className="border-t border-border-base bg-gray-900 dark:bg-surface-container-high text-white py-14 px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-2 text-center md:text-left max-w-xl">
             <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -535,7 +542,7 @@ export default function LandingPage() {
 
             <button
               onClick={() => navigate('/methodology')}
-              className="inline-flex items-center justify-center gap-1.5 border border-gray-700 hover:border-gray-600 hover:bg-gray-800 text-gray-200 text-sm font-medium px-5 py-3 rounded-xl transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 border border-gray-600 hover:border-gray-500 hover:bg-white/10 text-gray-200 text-sm font-medium px-5 py-3 rounded-xl transition-colors cursor-pointer"
             >
               Scientific Framework
               <ChevronRight className="h-4 w-4" />

@@ -23,6 +23,7 @@ import SavedAreasDrawer from '@/components/saved-areas/SavedAreasDrawer';
 import ProfileSettingsModal from '@/components/auth/ProfileSettingsModal';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import OrgSwitcher from '@/components/orgs/OrgSwitcher';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
@@ -127,7 +128,7 @@ export default function PublicLayout() {
             >
               <span>Explore Map</span>
             </button>
-
+            <ThemeToggle />
             {/* Auth State Button / User Dropdown */}
             {!isAuthenticated ? (
               <button
@@ -279,6 +280,7 @@ export default function PublicLayout() {
           {/* Mobile Hamburger Toggle */}
           <div className="flex md:hidden items-center gap-2">
             {isAuthenticated && <NotificationBell />}
+            <ThemeToggle />
             <button
               className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 cursor-pointer"
               onClick={() => setMobileOpen(!mobileOpen)}
