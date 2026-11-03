@@ -103,8 +103,8 @@ export default function AuthModal() {
       setErrorMessage('Please fill in all required fields.');
       return;
     }
-    if (password.length < 6) {
-      setErrorMessage('Password must be at least 6 characters long.');
+    if (password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long.');
       return;
     }
 
@@ -151,8 +151,8 @@ export default function AuthModal() {
       setErrorMessage('Please enter the reset token and your new password.');
       return;
     }
-    if (newPassword.length < 6) {
-      setErrorMessage('New password must be at least 6 characters long.');
+    if (newPassword.length < 8) {
+      setErrorMessage('New password must be at least 8 characters long.');
       return;
     }
 
@@ -384,10 +384,10 @@ export default function AuthModal() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
-                    minLength={6}
+                    minLength={8}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 6 characters"
+                    placeholder="At least 8 characters"
                     className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <button
@@ -491,10 +491,10 @@ export default function AuthModal() {
                   <input
                     type="password"
                     required
-                    minLength={6}
+                    minLength={8}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="••••••••"
+                    placeholder="At least 8 characters"
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>

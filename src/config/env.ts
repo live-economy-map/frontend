@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  VITE_API_URL: z.string().default('http://localhost:3000/api/v1'),
+  VITE_API_URL: z.string().default('/api/v1'),
   VITE_APP_NAME: z.string().default('Live Economy Map'),
   VITE_APP_ENV: z.string().default('development'),
 });
@@ -15,7 +15,7 @@ if (!parsed.success) {
 export const env = parsed.success
   ? parsed.data
   : {
-      VITE_API_URL: 'http://localhost:3000/api/v1',
+      VITE_API_URL: '/api/v1',
       VITE_APP_NAME: 'Live Economy Map',
       VITE_APP_ENV: 'development',
     };
