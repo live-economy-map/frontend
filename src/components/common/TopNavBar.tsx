@@ -1,7 +1,7 @@
-// src/components/common/TopNavBar.tsx
 import { Link, useLocation } from 'react-router-dom';
 import { ROUTES } from '@/constants';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 
 const NAV_LINKS = [
   { label: 'Home', to: ROUTES.HOME },
@@ -30,15 +30,18 @@ export function TopNavBar() {
 
   return (
     <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border-base bg-surface/80 px-space-gutter shadow-nav backdrop-blur-md">
+      {/* Logo */}
       <Link to={ROUTES.HOME} className="flex items-center gap-2.5 group">
         <img
           src="/ecolens-tr.png"
           alt="EcoLens Logo"
           className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
         />
+
         <span className="font-bold text-lg text-on-surface">EcoLens</span>
       </Link>
 
+      {/* Navigation links */}
       <div className="hidden gap-6 md:flex">
         {NAV_LINKS.map((link) => (
           <NavLink
@@ -50,21 +53,30 @@ export function TopNavBar() {
         ))}
       </div>
 
-      <Link
-        to={ROUTES.MAP}
-        className="hidden md:inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-label-caps text-label-caps text-white transition-transform hover:bg-primary-hover active:scale-95"
-      >
-        <img
-          src="/ecolens-tr.png"
-          alt="EcoLens"
-          className="h-4 w-auto brightness-0 invert object-contain"
-        />
-        <span>Explore the Map</span>
-      </Link>
+      {/* Actions */}
+      <div className="flex items-center gap-3">
+        {/* Explore map */}
+        <Link
+          to={ROUTES.MAP}
+          className="hidden md:inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-label-caps text-label-caps text-white transition-transform hover:bg-primary-hover active:scale-95"
+        >
+          <img
+            src="/ecolens-tr.png"
+            alt="EcoLens"
+            className="h-4 w-auto brightness-0 invert object-contain"
+          />
 
-      <button className="text-on-surface md:hidden" aria-label="Open menu">
-        <span className="material-symbols-outlined">menu</span>
-      </button>
+          <span>Explore the Map</span>
+        </Link>
+
+        {/* Theme toggle */}
+        <ThemeToggle />
+
+        {/* Mobile menu */}
+        <button type="button" className="text-on-surface md:hidden" aria-label="Open menu">
+          <span className="material-symbols-outlined">menu</span>
+        </button>
+      </div>
     </nav>
   );
 }
