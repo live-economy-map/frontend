@@ -12,6 +12,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { AdminSidebar } from '@/components/common/AdminSidebar';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { ROUTES } from '@/constants';
 import { useAdminAuthStore } from '@/store/adminAuth.store';
 import { useMutation } from '@tanstack/react-query';
@@ -36,7 +37,7 @@ export default function DashboardLayout() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-background text-on-surface flex flex-col md:flex-row selection:bg-primary/20">
       {/* Desktop Sidebar */}
       <AdminSidebar />
 
@@ -51,30 +52,31 @@ export default function DashboardLayout() {
       {/* Mobile Drawer */}
       <div
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transition-transform duration-300 ease-in-out md:hidden flex flex-col justify-between',
+          'fixed inset-y-0 left-0 z-50 w-64 bg-surface shadow-2xl transition-transform duration-300 ease-in-out md:hidden flex flex-col justify-between',
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         <div>
-          <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+          <div className="p-4 border-b border-border-base flex items-center justify-between">
             <Link
               to={ROUTES.HOME}
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center gap-2"
             >
               <img src="/ecolens-tr.png" alt="EcoLens" className="h-7 w-auto object-contain" />
-              <span className="font-bold text-gray-900">EcoLens Admin</span>
+              <span className="font-bold text-on-surface">EcoLens Admin</span>
             </Link>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 cursor-pointer"
+              aria-label="Close menu"
+              className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           <div className="p-3">
-            <p className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+            <p className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">
               Management
             </p>
             <div className="space-y-1">
@@ -88,14 +90,14 @@ export default function DashboardLayout() {
                     className={cn(
                       'flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all cursor-pointer',
                       isActive
-                        ? 'bg-blue-50 text-blue-700 font-bold'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-primary/10 text-primary font-bold'
+                        : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
                     )}
                   >
                     <Icon
                       className={cn(
                         'w-4 h-4 shrink-0',
-                        isActive ? 'text-blue-600' : 'text-gray-400'
+                        isActive ? 'text-primary' : 'text-on-surface-variant'
                       )}
                     />
                     <span>{label}</span>
@@ -106,18 +108,18 @@ export default function DashboardLayout() {
           </div>
         </div>
 
-        <div className="p-3 border-t border-gray-100 space-y-1">
+        <div className="p-3 border-t border-border-base space-y-1">
           <Link
             to={ROUTES.HOME}
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50"
+            className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-on-surface-variant hover:bg-surface-container"
           >
-            <ArrowLeft className="w-4 h-4 text-gray-400" />
+            <ArrowLeft className="w-4 h-4" />
             <span>Public Map</span>
           </Link>
           <button
             onClick={() => doLogout()}
-            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 cursor-pointer"
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-500/10 cursor-pointer"
           >
             <LogOut className="w-4 h-4 text-red-500" />
             <span>Log out</span>
@@ -127,20 +129,28 @@ export default function DashboardLayout() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:ml-60 min-w-0">
+        {/* Desktop Top Bar (theme toggle lives here on md+ screens) */}
+        <div className="sticky top-0 z-20 hidden h-14 items-center justify-end border-b border-border-base bg-surface/80 px-6 backdrop-blur-md md:flex">
+          <ThemeToggle />
+        </div>
+
         {/* Mobile Header */}
-        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-gray-200/80 bg-white/90 px-4 shadow-xs backdrop-blur-md md:hidden">
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border-base bg-surface/90 px-4 shadow-xs backdrop-blur-md md:hidden">
           <div className="flex items-center gap-2">
             <img src="/ecolens-tr.png" alt="EcoLens" className="h-6 w-auto object-contain" />
-            <span className="font-bold text-gray-900 text-sm">EcoLens Admin</span>
+            <span className="font-bold text-on-surface text-sm">EcoLens Admin</span>
           </div>
 
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 cursor-pointer"
-            aria-label="Open menu"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container cursor-pointer"
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
         </header>
 
         {/* Page Content */}

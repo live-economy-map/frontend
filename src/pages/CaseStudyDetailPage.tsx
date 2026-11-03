@@ -12,11 +12,11 @@ export default function CaseStudyDetailPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-white selection:bg-blue-100 selection:text-blue-900">
+    <div className="w-full min-h-screen bg-background text-on-surface selection:bg-primary/20">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 space-y-6">
         <Link
           to={ROUTES.CASE_STUDIES}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors group cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors group cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
           <span>Back to all Case Studies</span>
